@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Matcha</title>
+    <link rel="stylesheet" href="../layout/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  		<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+  		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<script>document.addEventListener('DOMContentLoaded', () => {
+
+        // Get all "navbar-burger" elements
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+      
+        // Check if there are any navbar burgers
+        if ($navbarBurgers.length > 0) {
+      
+          // Add a click event on each of them
+          $navbarBurgers.forEach( el => {
+            el.addEventListener('click', () => {
+      
+              // Get the target from the "data-target" attribute
+              const target = el.dataset.target;
+              const $target = document.getElementById(target);
+      
+              // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+              el.classList.toggle('is-active');
+              $target.classList.toggle('is-active');
+      
+            });
+          });
+        }
+      
+      });</script>
+         <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+              <a class="navbar-item">
+                <img src="/images/h.png" width="50" height="100">
+              </a>
+            </div>
+              <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+              </a>
+            
+          
+            <div id="navbarBasicExample" class="navbar-menu">
+              <div class="navbar-start">
+                <a href="/home"class="navbar-item">
+                 Go back
+                </a>
+             
+              </div>
+              <div class="navbar-end">
+                <div class="navbar-item">
+                  <div class="buttons">
+                    <a href="/" class="button is-primary">
+                      <strong>Sign out</strong>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </nav>
+          <div id='notif'>
+
+          </div>
+     
+<body style="height:100vh;background: linear-gradient(#FD4D52, #892B8B);">
+
+<div  class="wrapper">
+    <h1 style="color: #fff;font-weight: 700;font-size: 3em;">Chat List</h1>
+        <br>
+        <hr>
+        <!--Display Liked Users-->
+        <% for(users of likedBy){%>
+            <% var trueval = 0%>
+            <% for(liked of like){%>
+                <% if(liked == users){%>
+                    <% trueval = 1;%>
+                    <% break}%>
+            <% }%>
+            <% if(trueval == 1){%>
+              <% if(users.image){%>  
+                <div style="text-align: center;">   
+                <img src="data:image/jpg;base64,<%=users.image%>" width="200" height="200">
+            </div> 
+      
+           <%}%>
+                <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="chat?user=<%= liked%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= liked  %></button></a>
+
+            <%}%>
+        <%}%>
+   
+  </div>
+  <input hidden id ="uname" type="text" value="<%= name%>"/>
+  <script src="/chats.js"></script>
+  <script src="/notif.js"></script>
+  <footer >
+    <div class="content has-text-centered">
+        <p style="color:white;"><strong style="color:white;">Matcha</strong> by J.T.A.B <a href="https://github.com/BrandonSwanepoel/Matcha"></a></p>
+    </div>
+</footer>
+</body>

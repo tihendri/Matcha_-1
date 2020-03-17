@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <title>Matcha</title>
+    <link rel="stylesheet" href="../layout/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  		<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+  		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<script>document.addEventListener('DOMContentLoaded', () => {
+
+        // Get all "navbar-burger" elements
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+      
+        // Check if there are any navbar burgers
+        if ($navbarBurgers.length > 0) {
+      
+          // Add a click event on each of them
+          $navbarBurgers.forEach( el => {
+            el.addEventListener('click', () => {
+      
+              // Get the target from the "data-target" attribute
+              const target = el.dataset.target;
+              const $target = document.getElementById(target);
+      
+              // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+              el.classList.toggle('is-active');
+              $target.classList.toggle('is-active');
+      
+            });
+          });
+        }
+      
+      });</script>
+    
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item">
+            <img src="/images/h.png" width="50" height="100">
+          </a>
+        </div>
+          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+        <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-start">
+            <a href="/home"class="navbar-item">
+            Feed
+            </a>
+          </div>
+        
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons">
+                  <% if(status === true){%>
+                    <div  class="button is-primary">
+                      <strong>online</strong>
+                    </div>
+                    <% }%>
+                    <% if(status === false){%>
+                    <div class="button is-link" style="background-color:#ff0000;color:#fff;margin-bottom:1em">
+                    
+                          <strong>offline</strong>
+                         
+                    </div>
+                    <% }%>
+                <a href="/" class="button is-primary">
+                  <strong>Sign out</strong>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id='notif'>
+
+      </div>
+<body style="height:200vh;background: linear-gradient(#FD4D52, #892B8B);">
+    <div class="wrapper">
+<!-- <% if(photo){%>       
+        <img  class="profile-img" style="justify-content: center;" src="data:image/jpg;base64,<%=photo%>" width="400" height="400">
+   <%}%> 
+    -->
+    <h1 style="color: #fff;font-weight: 700;font-size: 3em;">Gallery</h1>
+    <hr>
+  <br>
+  
+        <div style="text-align: center;">
+        <%if(gallery){%>
+            <% for(gal of gallery){%>
+                    <img src="data:image/jpg;base64,<%=gal%>" width="200" height="180">
+            <% }%>
+        <% }%>
+        </div>
+    
+  
+   
+   </div>
+
+    </div>
+    <input hidden id ="uname" type="text" value="<%= name%>"/>
+    <script src="/chats.js"></script>
+    <script src="/notif.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<footer>
+    <div class="content has-text-centered">
+        <p style="color:rgb(0, 0, 0);"><strong style="color:rgb(0, 0, 0);">Matcha</strong> by J.T.A.B <a href="https://github.com/BrandonSwanepoel/Matcha"></a></p>
+    </div>
+</footer>
+</body>
