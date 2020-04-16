@@ -8,10 +8,8 @@ app.get('/visitProfile', (req, res) => {
     console.log(req.session.user);
     schema.user.findOne({ username: req.session.user }, function (err, data) {
         if (err) throw err;
-        console.log("data " + data);
         if (data) {
             app.locals.like = data.like;
-            console.log("like: " + data);
         }
     }).then(() => {
         var user = req.query.user.toString();
@@ -24,7 +22,6 @@ app.get('/visitProfile', (req, res) => {
             var index = str.indexOf(app.locals.visitingUser);
             return index
         }
-        console.log("like: " + app.locals.like);
         var count = findIndex(app.locals.like);
         if (count == '-1') {
             app.locals.count = '-1'
