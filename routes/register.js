@@ -144,10 +144,11 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
 });
 
 //verify user account
-app.get('/verify', (req, res) => {
+app.get('/verify',  urlencodedParser,(req, res) => {
     var key = req.query.vkey.toString();
     console.log(key);
-    schema.user.findOneAndUpdate({ vkey: key }, { $ne: [vkey, 'null'] },
+    // check why error with { $ne: [vkey, 'null'] },                            <--------!!!!!!!
+    schema.user.findOneAndUpdate({ vkey: key },
         {
             $set: {
                 verified: true
