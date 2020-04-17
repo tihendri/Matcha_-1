@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+const chatSchema = require('../models/chat');
 const schema = require('../models/User');
 
 //Users you can chat to

@@ -6,10 +6,11 @@ app.get('/logout', (req, res) => {
     //last seen
     D = new Date();
     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    status = "Last Seen: " + JSON.stringify(D.getHours()) + ":" + JSON.stringify(D.getMinutes()) + " - " + JSON.stringify(D.getDay()) + " " + JSON.stringify(months[D.getMonth()]) + " " + JSON.stringify(D.getFullYear())
     schema.user.findOneAndUpdate({ username: req.session.user },
         {
             $set: {
-                status: "Last Seen: " + D.getHours() + ":" + D.getMinutes() + " - " + D.getDay() + " " + months[D.getMonth()] + " " + D.getFullYear()
+                status: status
             }
         }, function (err, data) {
             if (err) throw err;

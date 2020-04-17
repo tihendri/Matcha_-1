@@ -1,16 +1,18 @@
 var express = require('express');
 var app = express();
+const session = require('express-session');
 const schema = require('../models/User');
 
 //View another persons Page
 app.get('/visitProfile', (req, res) => {
+    console.log(req.session.user);
     schema.user.findOne({ username: req.session.user }, function (err, data) {
+        if (err) throw err;
         if (data) {
-            app.locals.like = data.like
-
+            app.locals.like = data.like;
         }
-    })
-    var user = req.query.user.toString();
+    }).then(() => {
+        var user = req.query.user.toString();
     schema.user.findOne({ username: user }, function (err, data) {
         app.locals.fame = data.likedBy.length
         app.locals.status = data.status
@@ -33,7 +35,8 @@ app.get('/visitProfile', (req, res) => {
         console.log(app.locals.count)
         console.log('help')
         res.render('visitProfile', { name: req.session.user, like: app.locals.count, status: data.status, to: app.locals.visiting, photo: data.image, name: data.name, surname: data.surname, username: data.username, age: data.age, gender: data.gender, sp: data.sp, bio: data.bio, dislike: data.dislike, sport: data.sport, fitness: data.fitness, technology: data.technology, music: data.music, gaming: data.gaming, fame: app.locals.fame });
-    });
+    })})
+    
 });
 
 //Display Visiters Gallery
