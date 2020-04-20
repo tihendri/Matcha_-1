@@ -35,13 +35,15 @@ app.get('/visitProfile', async (req, res) => {
         var count = findIndex(req.session.like);
         console.log("like count "+count)
         if (count == '1') {
-            app.locals.count = '0'
+            app.locals.likeCount = '0'
         }
-        else if ((count == '-1') || (count == '0')){
-            app.locals.count = '-1'
+        else if (count == '0'){
+            app.locals.likeCount = '0'
+        }
+        else if (count == '-1'){
+            app.locals.likeCount = '-1'
         }
         //check if viewed
-        app.locals.likeCount = count
         req.session.likeOrUnlike = count;
         app.locals.visiting = data.username;
         req.session.visiting = app.locals.visiting;
@@ -56,7 +58,7 @@ app.get('/visitProfile', async (req, res) => {
         var viewedCount = findIndexOfUsername(app.locals.likeList);
         console.log("user likes you count ="+ viewedCount)
         if (err) throw err;
-        console.log("like value "+ app.locals.count)
+        console.log("like value "+ app.locals.likeCount)
         //Update ViewedBy in database
 
         function findIndexOfUserInViewedBy(str) {
@@ -86,7 +88,7 @@ app.get('/visitProfile', async (req, res) => {
             })
    
 
-        res.render('visitProfile', {uname: req.session.user,userLikeYou:viewedCount,like: app.locals.count,status: data.status, to: req.session.visiting , photo: data.image, name: data.name, surname: data.surname, username: data.username, age: data.age, gender: data.gender, sp: data.sp, bio: data.bio, dislike: data.dislike, sport: data.sport, fitness: data.fitness, technology: data.technology, music: data.music, gaming: data.gaming, fame: app.locals.fame });
+        res.render('visitProfile', {uname: req.session.user,userLikeYou:viewedCount,like: app.locals.likeCount,status: data.status, to: req.session.visiting , photo: data.image, name: data.name, surname: data.surname, username: data.username, age: data.age, gender: data.gender, sp: data.sp, bio: data.bio, dislike: data.dislike, sport: data.sport, fitness: data.fitness, technology: data.technology, music: data.music, gaming: data.gaming, fame: app.locals.fame });
     })})
 });
 //Display Visiters Gallery

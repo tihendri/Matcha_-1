@@ -26,7 +26,7 @@ console.log('count like value' + count)
             console.log('User Profile liked')
             app.locals.count = '0'
         }
-        else if (count == '1') {
+        else if ((count == '1')||(count == '0') ){
             const index = app.locals.liked.indexOf(count);
 
             liked.splice(index, 1);
