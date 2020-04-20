@@ -1,12 +1,12 @@
 var express = require('express');
 var app = express();
+const crypto = require('crypto');
 const schema = require('../models/User');
 const multer = require('multer');
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 const bodyParser = require('body-parser');
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
-
 //render profile page
 app.get('/profile', (req, res) => {
     schema.user.findOne({ username: req.session.user }, async function (err, data) {
@@ -14,9 +14,6 @@ app.get('/profile', (req, res) => {
         res.render('profile', { name: data.name, surname: data.surname, username: data.username, password: "******", email: data.email, age: data.age, gender: data.gender, sp: data.sp, bio: data.bio, fameRating: data.likedBy });
     });
 });
-
-
-
 //Update Profile
 app.post('/profile', upload.single('photo'), urlencodedParser, (req, res) => {
     schema.user.findOne({ username: req.session.user }, function (err, data) {

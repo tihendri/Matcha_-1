@@ -19,6 +19,8 @@ app.set('view engine', 'ejs');
 app.use('/layout', express.static('layout'));
 app.use('/images', express.static('images'));
 
+
+
 //ROUTES
 app.use(require('./routes/login.js'));
 app.use(require('./routes/register.js'));
@@ -26,7 +28,7 @@ app.use(require('./routes/forgotpass.js'));
 app.use(require('./routes/home.js'));
 app.use(require('./routes/profile.js'));
 app.use(require('./routes/sort.js'));
-app.use(require('./routes/changelocation.js'));
+app.use(require('./routes/changeLocation.js'));
 app.use(require('./routes/chat.js'));
 app.use(require('./routes/visitprofile.js'));
 app.use(require('./routes/filtersearch.js'));
@@ -77,7 +79,6 @@ function saveMsg(data) {
 //Socket setup
 var io = socket(server);
 io.on('connection',function(socket){
-
     socket.on('chat',function(data){
         socket.join(data.chatId);
         io.sockets.to(data.chatId).emit('chat',data);
@@ -87,13 +88,15 @@ io.on('connection',function(socket){
     });
     socket.on('liked',(data)=>{
         io.sockets.to(data.to).emit('like_notification',data.from);
+        console.log('Like notification!')
     });
     socket.on('unliked',(data)=>{
         io.sockets.to(data.to).emit('unlike_notification',data.from);
+        console.log('unLike notification!')
     });
     socket.on('viewed',(data)=>{
-        console.log(data.from);
         io.sockets.to(data.to).emit('viewed_notification',data.from);
+        console.log('view notification!')
     });
     socket.on('room',function(data){
         socket.join(data);

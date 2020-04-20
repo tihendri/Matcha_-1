@@ -31,7 +31,7 @@ app.get('/image-upload', (req, res) => {
     gfs.files.find().toArray((err, files) => {
         //check if files
         if (!files || files.length == 0) {
-            res.render('image-upload', { files: false });
+            res.render('image-upload', {name: req.session.user, files: false });
         } else {
             files.map(files => {
                 if (
@@ -49,7 +49,7 @@ app.get('/image-upload', (req, res) => {
             }
             if (app.locals.errlog == undefined)
                 app.locals.errlog = 'Please fill in the form to login!';
-            res.render('image-upload', { name: req.session.user, files: files });
+            res.render('image-upload', {name: req.session.user, files: files });
         }
     }
     )
@@ -60,7 +60,7 @@ app.get('/image-upload', (req, res) => {
         //check if files
         app.locals.galleryLen = data.gallery.length
         if (!files || files.length == 0) {
-            res.render('image-upload', { files: false });
+            res.render('image-upload', {name: req.session.user, files: false });
         } else {
             files.map(files => {
                 if (
@@ -74,7 +74,7 @@ app.get('/image-upload', (req, res) => {
             });
             if (app.locals.errlog == undefined)
                 app.locals.errlog = 'Please fill in the form to login!';
-            res.render('image-upload', { galleryLen: app.locals.galleryLen, files: files, username: req.session.user });
+            res.render('image-upload', {name: req.session.user, galleryLen: app.locals.galleryLen, files: files, username: req.session.user });
         }
     }
     )
@@ -89,8 +89,10 @@ app.get('/profile-page', (req, res) => {
             app.locals.image = data.image
             app.locals.galleryImage = data.gallery
             app.locals.galleryLen = data.gallery.length
+            app.locals.viewedBy = data.viewedBy
+
         }
-        res.render('profile-page', { name: req.session.user, galleryLen: app.locals.galleryLen, gallery: app.locals.galleryImage, photo: app.locals.image, username: req.session.user, fameRating: app.locals.fameRating });
+        res.render('profile-page', {like:"0", viewedBy: app.locals.viewedBy ,name: req.session.user, galleryLen: app.locals.galleryLen, gallery: app.locals.galleryImage, photo: app.locals.image, username: req.session.user, fameRating: app.locals.fameRating });
     })
 });
 //Display image

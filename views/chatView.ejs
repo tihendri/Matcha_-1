@@ -121,9 +121,9 @@ socket.on('show_notification', function (data) {
     <!-- <script>   $('#send').click(function () {
      socket.broadcast.to(socketid).emit('message', 'for your eyes only');
   })</script> -->
-  <script src="/chats.js"></script>
+  <!-- <script src="chats.js"></script>
   <input hidden id ="uname" type="text" value="<%= name%>"/>
-  <script src="/notif.js"></script>
+  <script src="../public/notif.js"></script> -->
   
     </div>
 
@@ -131,7 +131,9 @@ socket.on('show_notification', function (data) {
         
 </div>
 </div>
-
+<input hidden id ="uname" type="text" value="<%=name%>"/>
+    <script src="chats.js"></script>
+    <script src="notif.js"></script>
 </body>
 <footer>
     <div class="content has-text-centered">

@@ -154,3 +154,12 @@ button :hover{
   .button2:hover {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
   }
+  .viewedByBody {
+    padding-top: 25px;
+    text-align: center;
+    margin-bottom: 100%;
+   }
+   
+   .viewedBydiv {
+     display: inline-block;
+   }
