@@ -45,18 +45,6 @@ app.get('/home', (req, res) => {
             app.locals.arrayLength = app.locals.data.blocked.length;
             app.locals.userLength = app.locals.data.username.length;
 
-            if (data.status == "false") {
-                status = "true"
-                console.log('logged in')
-            }
-            schema.user.findOneAndUpdate({ username: req.session.user },
-                {
-                    $set: {
-                        status: "true"
-                    }
-                }, async function (err, data) {
-                    if (err) throw err;
-                })
             //Find if user has been liked
             var str = []
             function findIndex(str) {

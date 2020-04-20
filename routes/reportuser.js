@@ -22,7 +22,7 @@ app.post('/reportUser', (req, res) => {
         to: 'matchaprojectsup@gmail.com',
         subject: app.locals.visiting + 'has been reported by' + req.session.user,
         user: req.session.user,
-        repuser: app.locals.visiting
+        repuser: req.session.visiting
     }, function (err) {
         if (err) {
             console.log(err);
