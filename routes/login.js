@@ -25,7 +25,7 @@ app.post('/',urlencodedParser,(req,res) => {
                         req.session.user = req.body.enter_username;
                         app.locals.errlog = undefined;
                         schema.user.findOneAndUpdate({username: req.session.user},
-                            {$set:{status:"online"}}, async function(err, data){
+                            {$set:{status:"online"}}, function(err, data){
                                 if(err) throw err;
                             })
                         res.redirect('home');
