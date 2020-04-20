@@ -3,9 +3,11 @@ const session = require('express-session');
 const app = express();
 const mongoose = require('mongoose');
 const chatSchema = require('./models/chat');
+const schema = require('./models/User');
 require('dotenv/config');
 var socket = require('socket.io');
 var flash = require('connect-flash')
+const mailer = require('express-mailer');
 const config = require('./config.js')
 const port = config.port;
 
@@ -19,7 +21,17 @@ app.set('view engine', 'ejs');
 app.use('/layout', express.static('layout'));
 app.use('/images', express.static('images'));
 
-
+mailer.extend(app, {
+    from: 'matchaprojectsup@gmail.com',
+    host: 'smtp.gmail.com', // hostname
+    secureConnection: true, // use SSL
+    port: 465, // port for secure SMTP
+    transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts
+    auth: {
+        user: 'matchaprojectsup@gmail.com',
+        pass: 'Matcha123'
+    }
+})
 
 //ROUTES
 app.use(require('./routes/login.js'));
@@ -76,6 +88,24 @@ function saveMsg(data) {
     });
 };
 
+function notif_mail(from, notif) {
+    schema.user.findOne({ username: from }, async function (err, data) {
+        if (err) throw err;
+
+        app.mailer.send('notif', {
+            to: data.email,
+            subject: 'Matcha - Notification from ' + from,
+            from: from,
+            notif: notif
+        }, function (err) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            console.log('Notification email sent to ' + from);
+        })
+})}
+
 //Socket setup
 var io = socket(server);
 io.on('connection',function(socket){
@@ -85,18 +115,22 @@ io.on('connection',function(socket){
         saveMsg(data)
         io.sockets.to(data.to).emit('msg_notification',data.from);
         console.log('Message added to DB!')
+        notif_mail(data.from, " has sent you a message!")
     });
     socket.on('liked',(data)=>{
         io.sockets.to(data.to).emit('like_notification',data.from);
         console.log('Like notification!')
+        notif_mail(data.from, " has liked your profile!")
     });
     socket.on('unliked',(data)=>{
         io.sockets.to(data.to).emit('unlike_notification',data.from);
         console.log('unLike notification!')
+        notif_mail(data.from, " has unliked your profile!")
     });
     socket.on('viewed',(data)=>{
         io.sockets.to(data.to).emit('viewed_notification',data.from);
         console.log('view notification!')
+        notif_mail(data.from, " has viewed your profile!")
     });
     socket.on('room',function(data){
         socket.join(data);
