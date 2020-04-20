@@ -25,12 +25,12 @@ app.get('/visitProfile', async (req, res) => {
         app.locals.viewedBy = data.viewedBy
         // req.session.visiting = app.locals.visitingUser
 
-        console.log("visitingUser app.loclas "+req.session.visiting)
+        console.log("visitingUser app.locals "+req.session.visiting)
         function findIndex(str) {
             var index = str.indexOf(req.session.visiting);
             return index
         }
-        console.log("like app.loclas "+req.session.like)
+        console.log("like app.locals "+req.session.like)
         if(req.session.like)
         var count = findIndex(req.session.like);
         console.log("like count "+count)
