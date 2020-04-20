@@ -257,23 +257,29 @@ app.get('/viewed', urlencodedParser, (req, res) => {
 app.post('/dislike', urlencodedParser, (req, res) => {
     schema.user.findOne({ username: req.session.user }, async function (err, data) {
         if (err) throw err;
-
+        app.locals.visiting = req.session.visiting;
         function findIndex(str) {
             var index = str.indexOf(app.locals.visiting);
             return index
         }
-        app.locals.blocked = data.blocked;
-        var str = app.locals.blocked
-
-        var count = findIndex(app.locals.blocked);
-        if (count == '-1') {
-            str.push(app.locals.visiting);
-            console.log('User Profile blocked')
+        var str
+        if (data.blocked){
+            app.locals.blocked = data.blocked;
+            str = app.locals.blocked
+            var count = findIndex(app.locals.blocked);
+            if (count == '-1') {
+                str.push(app.locals.visiting);
+                console.log('User Profile blocked')
+            }
+            else {
+                const index = app.locals.blocked.indexOf(count);
+                app.locals.blocked.splice(index, 1);
+                console.log('User Profile is unblocked')
+            }
         }
         else {
-            const index = app.locals.blocked.indexOf(count);
-            app.locals.blocked.splice(index, 1);
-            console.log('User Profile is unblocked')
+            str.push(app.locals.visiting);
+            console.log('User Profile blocked')
         }
         schema.user.findOneAndUpdate({ username: req.session.user },
             {
