@@ -95,6 +95,10 @@ const mongoose = require('mongoose');
         type:String,
         default:null
     }],
+    viewedBy:[{
+        type:String,
+        default:null
+    }],
     blocked: [{
         type:String,
         default: null

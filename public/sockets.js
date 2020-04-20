@@ -41,11 +41,11 @@ $(function(){
         socket.emit('login_notif', {user: user.val()});
         socket.emit('login', {email: email.val()});
     })
-    // Listen for a new message
-    socket.on('new_message', (data) => {
-		if (data.chatID.includes(data.username) && chatRoomName.val() === data.chatID)
-			chatroom.append("<p style='color: white'>" + data.username + ": " +  data.message + "</p>");
-    });
+    // // Listen for a new message
+    // socket.on('new_message', (data) => {
+	// 	if (data.chatID.includes(data.username) && chatRoomName.val() === data.chatID)
+	// 		chatroom.append("<p style='color: white'>" + data.username + ": " +  data.message + "</p>");
+    // });
 
     // Send notif info on a like click to server
     like.click(function() {
@@ -54,30 +54,32 @@ $(function(){
         socket.emit('new_like', {liked: potmatch.val(), liker: liker.val()});
     }) 
 
-    // Listen for a new notif
-    socket.on('new_notification', (data) => {
-        notifblock.append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>"
-            + data.message + " " + data.user +
-            "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>"
-            + "</div>");
-    });
-    // listen for a new message notif.
-    socket.on('message_notification', (data) => {
-        var str = (window.location).toString();
-        if (!str.includes(data.chatID)) {
-            if (data.message.length > 30) {
-                notifblock.append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>"
-                + data.username + ": " + data.message.substring(0, 30) + "..." +
-                "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>"
-                + "</div>");
-            } else {
-                notifblock.append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>"
-                + data.username + ": " + data.message +
-                "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>"
-                + "</div>");
-            }
-        };
-    });
+    // // Listen for a new notif
+    // socket.on('new_notification', (data) => {
+    //     notifblock.append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>"
+    //         + data.message + " " + data.user +
+    //         "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>"
+    //         + "</div>");
+    // });
+    // // listen for a new message notif.
+    // socket.on('message_notification', (data) => {
+    //     console.log("new message here")
+    //     var str = (window.location).toString();
+    //     if (!str.includes(data.chatID)) {
+    //         if (data.message.length > 30) {
+    //             notifblock.append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>"
+    //             + data.username + ": " + data.message.substring(0, 30) + "..." +
+    //             "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>"
+    //             + "</div>");
+    //         } else {
+    //             notifblock.append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>"
+    //             + data.username + ": " + data.message +
+    //             "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>"
+    //             + "</div>");
+    //         }
+    //     };
+    // });
+
     // send to server on profile getting viewed
     view.click(function() {
         var str = (window.location).toString();

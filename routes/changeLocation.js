@@ -4,12 +4,16 @@ const schema = require('../models/User');
 const bodyParser = require('body-parser');
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-app.get('/changeLocation', (req, res) => {
-    res.render('changeLocation')
-});
+app.get('/changeLocation',(req,res) => {
+
+    console.log('changelocation area')
+    res.render('changeLocation',{name: req.session.user})
+    
+})
 
 //Change Location
 app.post('/changeLocation', urlencodedParser, (req, res) => {
+    console.log('area2')
     schema.user.findOne({ username: req.session.user }, function (err, data) {
         if (err) throw err;
         if (data) {

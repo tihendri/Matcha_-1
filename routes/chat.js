@@ -42,7 +42,7 @@ app.get('/chat', (req, res) => {
         chatSchema.chat.find({ chatId: app.locals.nameOfusers1 }, function (err, data) {
             if (err) throw err;
 
-            res.render('chatView', { status: app.locals.status, name: req.session.user, oldMessages: data, chatId: app.locals.nameOfusers1, to: app.locals.msgTo, from: req.session.user })
+            res.render('chatView', { name: req.session.user, status: app.locals.status, name: req.session.user, oldMessages: data, chatId: app.locals.nameOfusers1, to: app.locals.msgTo, from: req.session.user })
         })
     });
 });

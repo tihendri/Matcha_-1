@@ -1,5 +1,5 @@
 // Make connection
-var socket = io.connect('localhost:8013');
+var socket = io.connect('localhost:8014');
 
 // socket.on('connect',()=>{
 //     update()

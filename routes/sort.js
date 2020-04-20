@@ -5,16 +5,14 @@ const bodyParser = require('body-parser');
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.get('/sort', (req, res) => {
-    res.render('sort')
+    res.render('sort',{name: req.session.user})
 });
-
 //Sorting
 app.post('/sort', urlencodedParser, (req, res) => {
     schema.user.findOne({ username: req.session.user }, function (err, data) {
         if (data) {
             app.locals.userCity = data.city;
             app.locals.userPostal = data.postal;
-
             app.locals.data = data;
             app.locals.arrayLength = app.locals.data.blocked.length;
             app.locals.userLength = app.locals.data.username.length;
