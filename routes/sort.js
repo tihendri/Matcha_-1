@@ -7,6 +7,7 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.get('/sort', (req, res) => {
     res.render('sort',{name: req.session.user})
 });
+
 //Sorting
 app.post('/sort', urlencodedParser, (req, res) => {
     schema.user.findOne({ username: req.session.user }, function (err, data) {

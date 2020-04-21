@@ -91,9 +91,10 @@ app.get('/profile-page', (req, res) => {
             app.locals.galleryLen = data.gallery.length
             app.locals.viewedBy = data.viewedBy
             app.locals.ViewedHistory = data.viewedProfileHistory
+            app.locals.likeHistory = data.like
 console.log("This is the viewed History before profile-page "+app.locals.ViewedHistory)
         }
-        res.render('profile-page', {like:"0",  viewedProfileHistory: app.locals.ViewedHistory ,viewedBy: app.locals.viewedBy ,name: req.session.user, galleryLen: app.locals.galleryLen, gallery: app.locals.galleryImage, photo: app.locals.image, username: req.session.user, fameRating: app.locals.fameRating });
+        res.render('profile-page', {like:"0", likeHistory: app.locals.likeHistory, viewedProfileHistory: app.locals.ViewedHistory ,viewedBy: app.locals.viewedBy ,name: req.session.user, galleryLen: app.locals.galleryLen, gallery: app.locals.galleryImage, photo: app.locals.image, username: req.session.user, fameRating: app.locals.fameRating });
     })
 });
 //Display image
