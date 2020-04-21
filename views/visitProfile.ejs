@@ -96,22 +96,7 @@
 
 <input hidden id="from" type="text" value='<%=username%>'/>
   <input hidden id="to" type="text" value='<%=username%>'/>
-  <% if(userLikeYou == 1){%>
-    <article style=" float: right; text-align: center;" class="message is-link" >
-  
-      <div   style="background-color: grey">
-        <p style="padding-right:5px;padding-left:5px;color: white; font-weight: bold;">Note!</p>
-      </div>
-   
-      <div style="height:80px;width:auto;overflow:auto;text-align:center;font-size: 1em;" >
-        
-          
-  <p style="padding-right:5px;padding-left:5px;text-align: center; color: black;">This user liked your profile</p>            
-      
-          
-      </div>
-    </article>
-    <% }%>
+
 <body style="padding-bottom:4em;height:auto;background: linear-gradient(#FD4D52, #892B8B);">
 
 <table>
@@ -152,13 +137,8 @@
   </div>
   </td>
   </tr>
-  <% if (connected) { %>
-  <tr>
-    <td>
-        <button class="button is-link" style="background-color:#ff0000;color:#fff;margin-bottom:1em">furfacksakes You are connected with <%= to %></button>
-    </td>
-  </tr>
-  <% } %>
+  
+
 </table>
 
     <!-- disLike button -->

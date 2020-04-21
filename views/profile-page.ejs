@@ -181,7 +181,7 @@
           <% var viewHistory  = "viewer" %>
           <% for(viewer of likeHistory) {%>
             
-            <a style="text-decoration: none;" href="visitProfile?user=<%= viewer%>"><button style="text-decoration: none; background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= viewer %></button></a>
+            <p style="text-decoration: none; background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= viewer %></p>
                 
            <% viewHistory = viewer %>
             
@@ -193,7 +193,7 @@
       
       </article>
       
-<body style="height:300vh;background: linear-gradient(#FD4D52, #892B8B);">
+<body style="overflow:auto;height:100vh;padding-bottom:4em;background: linear-gradient(#FD4D52, #892B8B);">
 
 <div  class="wrapper">
     <h1 style="padding-top:4em;color: #fff;font-weight: 700;font-size: 3em;">Profile Page</h1>

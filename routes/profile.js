@@ -119,7 +119,6 @@ app.post('/profile', upload.single('photo'), urlencodedParser, (req, res) => {
         if (req.file) {
             image = req.file.buffer.toString('base64');
             app.locals.image = image
-            console.log("Hell yEah")
         }
         else {
             image = app.locals.image;

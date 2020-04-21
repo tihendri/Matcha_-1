@@ -86,7 +86,6 @@ console.log('count like value' + count)
     })
 })
 app.use(bodyParser.urlencoded({ extended: true })); 
-
 app.post('/removeLastViewedBy', async (req, res) => {
   app.locals.viewer = req.body.fname;
   
