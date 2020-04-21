@@ -15,7 +15,6 @@ mailer.extend(app, {
         pass: 'Matcha123'
     }
 })
-
 //Report User Profile
 app.post('/reportUser', (req, res) => {
     app.mailer.send('report', {

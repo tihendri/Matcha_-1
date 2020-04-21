@@ -133,6 +133,7 @@ app.get('/visitProfile', async (req, res) => {
         res.render('visitProfile', {connected: connected,uname: req.session.user,userLikeYou:app.locals.userLikesYouCount,like: app.locals.likeCount,status: data.status, to: req.session.visiting , photo: data.image, name: data.name, surname: data.surname, username: data.username, age: data.age, gender: data.gender, sp: data.sp, bio: data.bio, dislike: data.dislike, sport: data.sport, fitness: data.fitness, technology: data.technology, music: data.music, gaming: data.gaming, fame: app.locals.fame });
     })})
 });
+
 //Display Visiters Gallery
 app.get('/visitingGallery', (req, res) => {
     schema.user.findOne({ username: app.locals.visiting }, function (err, data) {
