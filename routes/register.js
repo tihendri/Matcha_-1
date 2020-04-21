@@ -56,13 +56,13 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
                 if (err) throw err;
 
                 if (res.city) {
-                    city = res.city;
+                    app.locals.city = res.city;
                 }
                 if (res.country) {
-                    country = res.country;
+                    app.locals.country = res.country;
                 }
                 if (res.postal) {
-                    postal = res.postal;
+                    app.locals.postal = res.postal;
                 }
             })
         })
@@ -90,9 +90,9 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
                         gaming: req.body.gaming,
                         ageBetween: req.body.ageBetween,
                         vkey: vkey,
-                        city: city,
-                        country: country,
-                        postal: postal,
+                        city: app.locals.city,
+                        country: app.locals.country,
+                        postal: app.locals.postal,
                     }).save(function (err) {
                         if (err) throw err;
                             //send verification email to user
