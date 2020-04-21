@@ -11,6 +11,7 @@ app.get('/visitProfile', async (req, res) => {
         if (data) {
             req.session.like = data.like;
             app.locals.viewed = data.viewed;
+            app.locals.userlikedBy = data.likedBy
             req.session.viewedHistory = data.viewedProfileHistory
             console.log("viewed History "+req.session.viewedHistory)
            
@@ -126,8 +127,10 @@ app.get('/visitProfile', async (req, res) => {
                     if (err) throw err;
                    
                 })
+                console.log(app.locals.userlikedBy + req.session.visiting);
+            var connected = app.locals.userlikedBy.includes(req.session.visiting)
 
-        res.render('visitProfile', {uname: req.session.user,userLikeYou:app.locals.userLikesYouCount,like: app.locals.likeCount,status: data.status, to: req.session.visiting , photo: data.image, name: data.name, surname: data.surname, username: data.username, age: data.age, gender: data.gender, sp: data.sp, bio: data.bio, dislike: data.dislike, sport: data.sport, fitness: data.fitness, technology: data.technology, music: data.music, gaming: data.gaming, fame: app.locals.fame });
+        res.render('visitProfile', {connected: connected,uname: req.session.user,userLikeYou:app.locals.userLikesYouCount,like: app.locals.likeCount,status: data.status, to: req.session.visiting , photo: data.image, name: data.name, surname: data.surname, username: data.username, age: data.age, gender: data.gender, sp: data.sp, bio: data.bio, dislike: data.dislike, sport: data.sport, fitness: data.fitness, technology: data.technology, music: data.music, gaming: data.gaming, fame: app.locals.fame });
     })})
 });
 //Display Visiters Gallery
