@@ -94,9 +94,9 @@
 
 </div>
 
-<input hidden id="from" type="text" value='<%=username%>'/>
-  <input hidden id="to" type="text" value='<%=username%>'/>
-  <% if(userLikeYou == 1){%>
+<input hidden id="from" type="text" value='<%=uname%>'/>
+  <input hidden id="to" type="text" value='<%=to%>'/>
+  <!-- <% if(userLikeYou == 1){%>
     <article style=" float: right; text-align: center;" class="message is-link" >
   
       <div   style="background-color: grey">
@@ -111,7 +111,7 @@
           
       </div>
     </article>
-    <% }%>
+    <% }%> -->
 <body style="padding-bottom:4em;height:auto;background: linear-gradient(#FD4D52, #892B8B);">
 
 <table>
@@ -152,15 +152,16 @@
   </div>
   </td>
   </tr>
-  
-  <% if (connected) { %>
-  <tr>
-    <td>
-        <button class="button is-link" style="background-color:#ff0000;color:#fff;margin-top:1em">You are connected with <%= to %></button>
-    </td>
-  </tr>
-  <% } %>
 </table>
+<% if (connected) { %>
+<table>
+    <tr>
+      <td>
+          <button class="button is-primary" style="color:#fff;margin-top:1em">You are connected with <%= to %></button>
+      </td>
+    </tr>
+</table>
+<% } %>
 
     <!-- disLike button -->
     <div class="wrapper">

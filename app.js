@@ -88,8 +88,8 @@ function saveMsg(data) {
     });
 };
 
-function notif_mail(from, notif) {
-    schema.user.findOne({ username: from }, async function (err, data) {
+function notif_mail(from, to, notif) {
+    schema.user.findOne({ username: to }, async function (err, data) {
         if (err) throw err;
 
         app.mailer.send('notif', {
@@ -115,22 +115,22 @@ io.on('connection',function(socket){
         saveMsg(data)
         io.sockets.to(data.to).emit('msg_notification',data.from);
         console.log('Message added to DB!')
-        notif_mail(data.from, " has sent you a message!")
+        notif_mail(data.from, data.to, " has sent you a message!")
     });
     socket.on('liked',(data)=>{
         io.sockets.to(data.to).emit('like_notification',data.from);
         console.log('Like notification!')
-        notif_mail(data.from, " has liked your profile!")
+        notif_mail(data.from, data.to, " has liked your profile!")
     });
     socket.on('unliked',(data)=>{
         io.sockets.to(data.to).emit('unlike_notification',data.from);
         console.log('unLike notification!')
-        notif_mail(data.from, " has unliked your profile!")
+        notif_mail(data.from, data.to, " has unliked your profile!")
     });
     socket.on('viewed',(data)=>{
         io.sockets.to(data.to).emit('viewed_notification',data.from);
-        console.log('view notification!')
-        notif_mail(data.from, " has viewed your profile!")
+        console.log('view notification! from: ' + data.from)
+        notif_mail(data.from, data.to, " has viewed your profile!")
     });
     socket.on('room',function(data){
         socket.join(data);
