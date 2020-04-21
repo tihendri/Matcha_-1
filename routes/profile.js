@@ -11,7 +11,7 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.get('/profile', (req, res) => {
     schema.user.findOne({ username: req.session.user }, async function (err, data) {
         if (err) throw err;
-        res.render('profile', { name: data.name, surname: data.surname, username: data.username, password: "******", email: data.email, age: data.age, gender: data.gender, sp: data.sp, bio: data.bio, fameRating: data.likedBy });
+        res.render('profile', { name: data.name, surname: data.surname, username: data.username, password: "******", email: data.email, age: data.age, gender: data.gender, sp: data.sp, bio: data.bio, fameRating: data.likedBy,sport: data.sport, fitness: data.fitness, technology: data.technology, music: data.music, gaming: data.gaming});
     });
 });
 //Update Profile
@@ -61,12 +61,14 @@ app.post('/profile', upload.single('photo'), urlencodedParser, (req, res) => {
             age = data.age;
         }
         if (req.body.gender) {
+            if(req.body.gender == "Male" || req.body.gender == "Female")
             gender = req.body.gender;
         }
         else {
             gender = data.gender;
         }
         if (req.body.sp) {
+            if(req.body.sp == "Heterosexual" || req.body.sp == "Homosexual" || req.body.sp == "Bisexual")
             sp = req.body.sp;
         }
         else {

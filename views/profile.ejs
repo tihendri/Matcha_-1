@@ -149,15 +149,47 @@
        <textarea class="textarea" placeholder="<%= bio%>" name="bio"></textarea>
     </div>
   </div>
+  <div style="color:white;text-align: center;" class="field"><label class="label" style="color:white;" type="text">Interests</label>
+    <% if(sport == "on") {%>
+    <input type="checkbox" name="sport" checked>Sport<br><br>
+    <% }%>
+    <% if(sport == "off") {%>
+    <input type="checkbox" name="sport" >Sport<br><br>
+    <% }%>
+    <% if(fitness == "on") {%>
+    <input type="checkbox" name="fitness" checked>Fitness<br><br>
+    <% }%>
+    <% if(fitness == "off") {%>
+    <input type="checkbox" name="fitness" >Fitness<br><br>
+    <% }%>
+    <% if(technology == "on") {%>
+    <input type="checkbox" name="tecnology" checked>Technology<br><br>
+    <% }%>
+    <% if(technology == "off") {%>
+    <input type="checkbox" name="tecnology">Technology<br><br>
+    <% }%>
+    <% if(music == "on") {%>
+    <input type="checkbox" name="music" checked>Music<br><br>
+    <% }%>
+    <% if(music == "off") {%>
+    <input type="checkbox" name="music" >Music<br><br>
+    <% }%>
+    <% if(gaming == "on") {%>
+    <input type="checkbox" name="gaming" checked>Gaming<br><br>
+    <% }%>
+    <% if(gaming == "off") {%>
+    <input type="checkbox" name="gaming" >Gaming<br><br>
+    <% }%>
+</div>
       <div  class="control"><button class="btn btn-primary btn-block"type="submit" name="submit">Submit</button></div></a>
     </form>
 </div>
 <input hidden id ="uname" type="text" value="<%= username%>"/>
 <script src="chats.js"></script>
 <script src="notif.js"></script>
-  <footer >
+  <!-- <footer >
     <div class="content has-text-centered">
         <p style="color:white;"><strong style="color:white;">Matcha</strong> by J.T.A.B <a href="https://github.com/BrandonSwanepoel/Matcha"></a></p>
     </div>
-  </footer>
+  </footer> -->
 </body>
