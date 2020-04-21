@@ -42,6 +42,7 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
     //validate password
     if (validate.checkPassword(req.body.password)) {
         //hash password and vkey
+        const username = req.body.username.charAt(0).toUpperCase() + req.body.username.substring(1);
         var password = req.body.password;
         var key = req.body.username + Date.now();
         const hashpw = crypto.createHash("sha256");
@@ -49,8 +50,25 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
         hashpw.update(password);
         hashkey.update(key);
         vkey = hashkey.digest("hex");
+        getIP(function (err, ip) {
+            var geo = iplocation(ip, [], function (err, res) {
+                if (err) throw err;
+                //add new user to db
+                if (err) throw err;
+
+                if (res.city) {
+                    city = res.city;
+                }
+                if (res.country) {
+                    country = res.country;
+                }
+                if (res.postal) {
+                    postal = res.postal;
+                }
+            })
+        })
         //checks if user exists and insert user data into db
-        schema.user.findOne({ username: req.body.username }, function (err, data) {
+        schema.user.findOne({ username: username }, function (err, data) {
             if (req.body.age >= 18) {
                 if (err) throw err;
                 if (data == null) {
@@ -59,7 +77,7 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
                         image: req.file.buffer.toString('base64'),
                         name: req.body.name,
                         surname: req.body.surname,
-                        username: req.body.username,
+                        username: username,
                         password: hashpw.digest("hex"),
                         email: req.body.email,
                         age: req.body.age,
@@ -72,37 +90,12 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
                         music: req.body.music,
                         gaming: req.body.gaming,
                         ageBetween: req.body.ageBetween,
-                        vkey: vkey
+                        vkey: vkey,
+                        city: city,
+                        country: country,
+                        postal: postal,
                     }).save(function (err) {
                         if (err) throw err;
-                        else {
-                            getIP(function (err, ip) {
-                                var geo = iplocation(ip, [], function (err, res) {
-                                    if (err) throw err;
-                                    //add new user to db
-                                    if (err) throw err;
-
-                                    if (res.city) {
-                                        city = res.city;
-                                    }
-                                    if (res.country) {
-                                        country = res.country;
-                                    }
-                                    if (res.postal) {
-                                        postal = res.postal;
-                                    }
-                                    schema.user.findOneAndUpdate({ username: req.session.user },
-                                        {
-                                            $set: {
-                                                city: city,
-                                                country: country,
-                                                postal: postal,
-                                            }
-                                        }, async function (err, data) {
-                                            if (err) throw err;
-                                        })
-                                })
-                            })
                             //send verification email to user
                             app.mailer.send('email', {
                                 to: req.body.email,
@@ -114,13 +107,14 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
                                     console.log(err);
                                     return;
                                 }
-                                console.log('Registration email sent to ' + req.body.username);
+                                console.log('Registration email sent to ' + username);
                             })
-                        }
-                        console.log("Added user to DB!")
-                    })
+                            console.log("Added user to DB!")
+                        })
+                    
+                
                     //set session variable and unset local error variable
-                    req.session.user = req.body.username;
+                    req.session.user = username;
                     app.locals.erreg = undefined;
                     res.redirect('/');
                 }
