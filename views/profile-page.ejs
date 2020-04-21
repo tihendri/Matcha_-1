@@ -97,7 +97,7 @@
       <div id='notif'>
 
       </div>
-      <article style=" float: right; text-align: center;" class="message is-link" >
+      <article style=" margin:1em;float: right; text-align: center;" class="message is-link" >
 
         <div   style="background-color: grey">
           <p style="color: white; font-weight: bold;">Viewed By</p>
@@ -142,10 +142,10 @@
                 
         
       </article>
-      <article style=" float: right; text-align: center;" class="message is-link" >
+      <article style=" margin:1em; float: right; text-align: center;" class="message is-link" >
     
         <div   style="background-color: grey">
-          <p style="color: white; font-weight: bold;">Profiles you have viewed</p>
+          <p style="padding-right:5px;padding-left:5px;color: white; font-weight: bold;">Profiles you have viewed</p>
         </div>
      
         <div style="height:80px;width:auto;overflow:auto;text-align:center;font-size: 1em;" >
@@ -171,10 +171,32 @@
                 
         
       </article>
+      <article style=" margin:1em; float: right; text-align: center;" class="message is-link" >
+    
+        <div   style="background-color: grey">
+          <p style="padding-right:5px;padding-left:5px;color: white; font-weight: bold;">Profiles you have Liked</p>
+        </div>
+     
+        <div style="height:80px;width:auto;overflow:auto;text-align:center;font-size: 1em;" >
+          <% var viewHistory  = "viewer" %>
+          <% for(viewer of likeHistory) {%>
+            
+            <a style="text-decoration: none;" href="visitProfile?user=<%= viewer%>"><button style="text-decoration: none; background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= viewer %></button></a>
+                
+           <% viewHistory = viewer %>
+            
+            <%}%>
+           
+          
+            
+        </div>
+      
+      </article>
+      
 <body style="height:300vh;background: linear-gradient(#FD4D52, #892B8B);">
 
 <div  class="wrapper">
-    <h1 style="color: #fff;font-weight: 700;font-size: 3em;">Profile Page</h1>
+    <h1 style="padding-top:4em;color: #fff;font-weight: 700;font-size: 3em;">Profile Page</h1>
 <br>
 <hr>
     
