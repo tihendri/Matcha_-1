@@ -48,7 +48,7 @@
   });</script>
 
 
-<nav class="navbar" role="navigation" aria-label="main navigation">
+<nav style="padding-left: 0;"class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item">
       <img src="/images/h.png" width="50" height="100">
@@ -112,33 +112,27 @@
       </div>
     </article>
     <% }%>
-<body style="height:200vh;background: linear-gradient(#FD4D52, #892B8B);">
-  <!-- <body onload="view('boy','we')" style="height:200vh;background: linear-gradient(#FD4D52, #892B8B);"> -->
-  <!-- <script>  function view(from,to){
-          socket.emit('viewed',{from,to})
-        }
-  </script> -->
-
+<body style="padding-bottom:4em;height:auto;background: linear-gradient(#FD4D52, #892B8B);">
 
 <table>
   <tr>
     <td>
-  <div class="wrapper">
+      <div  style= "padding-left:0;margin-top:2em">
     <form action="/reportUser" method="POST">
       <button class="button is-link" style="background-color:#ff0000;color:#fff;margin-bottom:1em">Report User</button>
     </form>
     </div>
   </td>
   <td>
-    <div class="wrapper" style="padding-left: 0;">
+    <div  style=" padding-left:0;margin-top:2em">
     <a href="visitingGallery"><button class="button is-link"
         style="background-color:#828afc;color:#fff;margin-bottom:1em" id="view"
         value="<%= username %>">Gallery</button></a>
-        </div>
+        
       </td>
       <td>
     <!-- Like button -->
-    <div class="wrapper" style="padding-left: 0;">
+    <div  style="padding-left:0;margin-top:2em">
     <form action="/like" method="POST">
       <% if(like == 0) {%>
       <button id="unlikeBtn" class="button is-link" style="background-color:#828afc;color:#fff;margin-bottom:1em"
@@ -151,7 +145,7 @@
   </div>
   </td>
   <td>
-    <div class="wrapper" style="padding-left: 0;">
+    <div  style="padding-left:0; margin-top:2em">
     <form action="/dislike" method="POST">
       <button class="button is-link" style="background-color:#828afc;color:#fff" value="<%= username %>">Block</button>
     </form>
