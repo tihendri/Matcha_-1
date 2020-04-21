@@ -58,9 +58,11 @@ var notif = document.getElementById('notif'),
        
         socket.on('viewed_notification',function(data){
             console.log("unlike notifi" + data)
+            if (!notif.innerHTML.includes(data)){
             notif.innerHTML += "<div class='alert alert-danger alert-dismissible fade show' role='alert'>" + 
             "Your profile was viewed by " + data + 
             "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>" + "</div>";
+            }
         })
         socket.on('unlike_notification',function(data){
             console.log("unlike notifi" + data)
