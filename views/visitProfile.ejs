@@ -120,16 +120,25 @@
   </script> -->
 
 
-
+<table>
+  <tr>
+    <td>
   <div class="wrapper">
     <form action="/reportUser" method="POST">
       <button class="button is-link" style="background-color:#ff0000;color:#fff;margin-bottom:1em">Report User</button>
     </form>
+    </div>
+  </td>
+  <td>
+    <div class="wrapper" style="padding-left: 0;">
     <a href="visitingGallery"><button class="button is-link"
         style="background-color:#828afc;color:#fff;margin-bottom:1em" id="view"
         value="<%= username %>">Gallery</button></a>
-
+        </div>
+      </td>
+      <td>
     <!-- Like button -->
+    <div class="wrapper" style="padding-left: 0;">
     <form action="/like" method="POST">
       <% if(like == 0) {%>
       <button id="unlikeBtn" class="button is-link" style="background-color:#828afc;color:#fff;margin-bottom:1em"
@@ -139,12 +148,19 @@
         value="<%= username %>">Like</button>
       <% } %>
     </form>
+  </div>
+  </td>
+  <td>
+    <div class="wrapper" style="padding-left: 0;">
     <form action="/dislike" method="POST">
       <button class="button is-link" style="background-color:#828afc;color:#fff" value="<%= username %>">Block</button>
     </form>
-
+  </div>
+  </td>
+  </tr>
+</table>
     <!-- disLike button -->
-
+    <div class="wrapper">
    
      
         <button  id="viewBtn" class="button is-link" style="background-color:#828afc;color:#fff;margin-bottom:1em; visibility: hidden;" value="<%= username %>"></button>
