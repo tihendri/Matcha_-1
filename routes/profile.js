@@ -61,14 +61,14 @@ app.post('/profile', upload.single('photo'), urlencodedParser, (req, res) => {
             age = data.age;
         }
         if (req.body.gender) {
-            if(req.body.gender == "Male" || req.body.gender == "Female")
+           
             gender = req.body.gender;
+            
         }
         else {
             gender = data.gender;
         }
         if (req.body.sp) {
-            if(req.body.sp == "Heterosexual" || req.body.sp == "Homosexual" || req.body.sp == "Bisexual")
             sp = req.body.sp;
         }
         else {
