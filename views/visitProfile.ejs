@@ -6,6 +6,8 @@
   <title>Matcha</title>
   <link rel="stylesheet" href="../layout/index.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+  <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+
   <script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
   <script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
@@ -94,7 +96,22 @@
 
 <input hidden id="from" type="text" value='<%=username%>'/>
   <input hidden id="to" type="text" value='<%=username%>'/>
-
+  <% if(userLikeYou == 1){%>
+    <article style=" float: right; text-align: center;" class="message is-link" >
+  
+      <div   style="background-color: grey">
+        <p style="color: white; font-weight: bold;">Note!</p>
+      </div>
+   
+      <div style="height:80px;width:auto;overflow:auto;text-align:center;font-size: 1em;" >
+        
+          
+  <p style="text-align: center; color: black;">This user liked your profile</p>            
+      
+          
+      </div>
+    </article>
+    <% }%>
 <body style="height:200vh;background: linear-gradient(#FD4D52, #892B8B);">
   <!-- <body onload="view('boy','we')" style="height:200vh;background: linear-gradient(#FD4D52, #892B8B);"> -->
   <!-- <script>  function view(from,to){
@@ -137,22 +154,7 @@
           });
           </script>
   
-<% if(userLikeYou == 1){%>
-  <article style=" float: right; text-align: center;" class="message is-link" >
 
-    <div   style="background-color: grey">
-      <p style="color: white; font-weight: bold;">Note!</p>
-    </div>
- 
-    <div style="height:80px;width:auto;overflow:auto;text-align:center;font-size: 1em;" >
-      
-        
-<p style="text-align: center; color: black;">This user liked your profile</p>            
-    
-        
-    </div>
-  </article>
-  <% }%>
     <div class="field">
       <div class="profile-img">
       
@@ -163,7 +165,7 @@
           <img src="../images/profile_image_holder.png" width="200" height="200">
           <% }%>
         </div>
-    
+     
       <label class="label" style="color:white; ;">Name</label>
         <div class="control">
           <label class="input" type="text" name="name"><%= name%></label></div>

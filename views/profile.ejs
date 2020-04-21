@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Matcha</title>
     <link rel="stylesheet" href="../layout/index.css">
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
     <script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -98,23 +99,22 @@
           <input class="input" type="text" placeholder="<%= surname%>" name="surname">
         </div>
       </div>
-    <div class="field">
+    <!-- <div class="field">
       <label class="label" style="color:white;">Username</label>
-        <div class="control has-icons-left has-icons-right">
+        
           <input class="input is-success" type="text" placeholder="<%= username%>" name="username">
-          <span class="icon is-small is-left"><i class="fas fa-user"></i>
-          </span><span class="icon is-small is-right"><i class="fas fa-check"></i>
-          </span>
-        </div>
-        <p class="help is-success">This username is available</p>
-    </div>
+         
+         
+        </div> -->
+       
+    <!-- </div> -->
     <label class="label" style="color:white; ;">Password</label>
     <div class="control">
       <input class="input" type="password" placeholder="<%= password%>" name="password">
     </div>
     <div class="field">
       <label class="label" style="color:white;">Email</label>
-        <div class="control has-icons-left has-icons-right">
+        <div>
           <input class="input" type="text" placeholder="<%= email%>" name="email">
     </div>
     <div class="field"><label class="label" style="color:white;">Age</label>
@@ -125,6 +125,7 @@
         <div class="control">
             <div class="select">
               <select name="gender" placeholder="<%= gender%>">
+                <option>Your Gender is set to <%= gender%></option>
               <option>Male</option>
               <option>Female</option>
             </select>
@@ -136,6 +137,7 @@
         <div class="control">
             <div class="select">
               <select name="sp" placeholder="<%= sp%>">
+                <option>Set to <%= sp%></option>
               <option>Heterosexual</option>
               <option>Homosexual</option>
               <option>Bisexual</option>

@@ -11,6 +11,8 @@ app.get('/visitProfile', async (req, res) => {
         if (data) {
             req.session.like = data.like;
             app.locals.viewed = data.viewed;
+            req.session.viewedHistory = data.viewedProfileHistory
+            console.log("viewed History "+req.session.viewedHistory)
            
         }
     }).then(() => {
@@ -22,7 +24,6 @@ app.get('/visitProfile', async (req, res) => {
         app.locals.likedBy = data.likedBy
         app.locals.viewedBy = data.viewedBy
         app.locals.visitingUser = data.username
-        app.locals.viewedBy = data.viewedBy
         // req.session.visiting = app.locals.visitingUser
 
         console.log("visitingUser app.locals "+req.session.visiting)
@@ -34,13 +35,10 @@ app.get('/visitProfile', async (req, res) => {
         if(req.session.like)
         var count = findIndex(req.session.like);
         console.log("like count "+count)
-        if (count == '1') {
+        if (count >= '0') {
             app.locals.likeCount = '0'
         }
-        else if (count == '0'){
-            app.locals.likeCount = '0'
-        }
-        else if (count == '-1'){
+        else if (count < '1'){
             app.locals.likeCount = '-1'
         }
         //check if viewed
@@ -55,9 +53,18 @@ app.get('/visitProfile', async (req, res) => {
             console.log("21 "+req.session.user);
             return index
         }
-        var viewedCount = findIndexOfUsername(app.locals.likeList);
-        console.log("user likes you count ="+ viewedCount)
+        var userLikesYouCount = findIndexOfUsername(app.locals.likeList);
+        console.log("user likes you count ="+ userLikesYouCount)
+        
         if (err) throw err;
+        if(userLikesYouCount < 0)
+        {
+            app.locals.userLikesYouCount = 0;
+        }
+        else if(userLikesYouCount >= 0)
+        {
+            app.locals.userLikesYouCount = 1;
+        }
         console.log("like value "+ app.locals.likeCount)
         //Update ViewedBy in database
 
@@ -66,29 +73,61 @@ app.get('/visitProfile', async (req, res) => {
             console.log(index);
             return index
         }
+        //Update ViewHistory in database
+        
+        function findIndexOfUserInViewedHistory(str) {
+            var index = str.indexOf(req.session.visiting);
+            console.log(index);
+            return index
+        }
         
         var viewedBy = app.locals.viewedBy
+        var viewedHistory = req.session.viewedHistory
+        console.log("This is the viewedHistory = "+viewedHistory)
+        console.log("This is the visiting user = "+req.session.visiting)
 
         var viewedCount = findIndexOfUserInViewedBy(app.locals.viewedBy);
+        var viewedHistoryCount = findIndexOfUserInViewedHistory(viewedHistory);
+    console.log("This is viewedHistoryCount = "+viewedHistoryCount)
+    console.log("This is iewedCount = "+viewedCount)
         if (viewedCount == '-1') {
             viewedBy.push(req.session.user);
             console.log('User Profile viewewdBy')
-            app.locals.viewedCount = '0'
+            app.locals.viewedCount = '1'
             
         }
+    
+        if (viewedHistoryCount == '-1') {
+            viewedHistory.push(req.session.visiting);
+            console.log('User Profile viewedHistory')
+            app.locals.viewedHistoryCount = '1'
+        }
+       
         console.log('this is the uname '+req.session.user)
         schema.user.findOneAndUpdate({ username: app.locals.visiting },
             {
                 $set: {
                     viewedBy: viewedBy
+                    
+
                 }
             }, async function (err, data) {
                 if (err) throw err;
                
             })
-   
+            schema.user.findOneAndUpdate({ username: req.session.user },
+                {
+                    $set: {
+                       
+                        viewedProfileHistory: viewedHistory
+    
+                    }
+                }, async function (err, data) {
+                    if (err) throw err;
+                   
+                })
 
-        res.render('visitProfile', {uname: req.session.user,userLikeYou:viewedCount,like: app.locals.likeCount,status: data.status, to: req.session.visiting , photo: data.image, name: data.name, surname: data.surname, username: data.username, age: data.age, gender: data.gender, sp: data.sp, bio: data.bio, dislike: data.dislike, sport: data.sport, fitness: data.fitness, technology: data.technology, music: data.music, gaming: data.gaming, fame: app.locals.fame });
+        res.render('visitProfile', {uname: req.session.user,userLikeYou:app.locals.userLikesYouCount,like: app.locals.likeCount,status: data.status, to: req.session.visiting , photo: data.image, name: data.name, surname: data.surname, username: data.username, age: data.age, gender: data.gender, sp: data.sp, bio: data.bio, dislike: data.dislike, sport: data.sport, fitness: data.fitness, technology: data.technology, music: data.music, gaming: data.gaming, fame: app.locals.fame });
     })})
 });
 //Display Visiters Gallery

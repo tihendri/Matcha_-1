@@ -99,6 +99,10 @@ const mongoose = require('mongoose');
         type:String,
         default:null
     }],
+    viewedProfileHistory:[{
+        type:String,
+        default:null
+    }],
     blocked: [{
         type:String,
         default: null

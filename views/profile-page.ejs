@@ -2,6 +2,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     
     <title>Matcha</title>
@@ -96,6 +97,80 @@
       <div id='notif'>
 
       </div>
+      <article style=" float: right; text-align: center;" class="message is-link" >
+
+        <div   style="background-color: grey">
+          <p style="color: white; font-weight: bold;">Viewed By</p>
+        </div>
+     
+        <div style="height:80px;width:auto;overflow:auto;text-align:center;font-size: 1em;" >
+          <% var view  = "viewer" %>
+          <% for(viewer of viewedBy) {%>
+            
+            <a style="text-decoration: none;" href="visitProfile?user=<%= viewer%>"><button style="text-decoration: none; background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= viewer %></button></a>
+                
+           <% view = viewer %>
+            
+                  <!-- <form action="/set" method="POST">
+                    <button  id="set" class="button is-link" style="background-color:#828afc;"></button>
+                    <script>
+              jQuery(function(){
+                 jQuery('#set').click();
+              });
+              </script>
+                  </form> -->
+            <!-- <form action="/like" method="POST">
+              <% if(like == 0) {%>
+                  <button  id="unlikeBtn" class="button is-link" style="background-color:#828afc;">Unlike</button>
+              <% }if(like == -1) { %>
+                <button id="likeBtn" class="button is-link"  style="background-color:#828afc;color:#fff;margin-bottom:1em" >Like</button>
+                <% } %>
+            </form>  -->
+            
+            <%}%>
+           
+           <% console.log("delete" + view) %>
+            
+        </div>
+      
+          <div style="text-align:center;font-size: 1em;" >
+              <form action="http://localhost:8014/removeLastViewedBy" method="POST">
+                <input hidden type="text" name="fname" value="<%= view %>">
+             <button style="text-decoration: none; background-color: red;color:#fff;font-weight: 700;"  class="button2 form-control"  type="submit">Remove last user</button>
+            </form>  
+          </div>
+                
+        
+      </article>
+      <article style=" float: right; text-align: center;" class="message is-link" >
+    
+        <div   style="background-color: grey">
+          <p style="color: white; font-weight: bold;">Profiles you have viewed</p>
+        </div>
+     
+        <div style="height:80px;width:auto;overflow:auto;text-align:center;font-size: 1em;" >
+          <% var viewHistory  = "viewer" %>
+          <% for(viewer of viewedProfileHistory) {%>
+            
+            <a style="text-decoration: none;" href="visitProfile?user=<%= viewer%>"><button style="text-decoration: none; background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= viewer %></button></a>
+                
+           <% viewHistory = viewer %>
+            
+            <%}%>
+           
+          
+            
+        </div>
+      
+          <div style="text-align:center;font-size: 1em;" >
+              <form action="http://localhost:8014/removeLastViewedHistory" method="POST">
+                <input hidden type="text" name="fname" value="<%= viewHistory %>">
+             <button style="text-decoration: none; background-color: red;color:#fff;font-weight: 700;"  class="button2 form-control"  type="submit">Remove last user</button>
+            </form>  
+          </div>
+                
+        
+      </article>
 <body style="height:300vh;background: linear-gradient(#FD4D52, #892B8B);">
 
 <div  class="wrapper">
@@ -118,52 +193,8 @@
     <img src="https://www.positronx.io/wp-content/uploads/2019/03/galaxy-background-2634-02.jpg" alt="Image with scroll box">
     </div>
   </article> -->
-  <article style=" float: right; text-align: center;" class="message is-link" >
-
-    <div   style="background-color: grey">
-      <p style="color: white; font-weight: bold;">Viewed by</p>
-    </div>
- 
-    <div style="height:80px;width:auto;overflow:auto;text-align:center;font-size: 1em;" >
-      <% var view  = "viewer" %>
-      <% for(viewer of viewedBy) {%>
-        
-        <a style="text-decoration: none;" href="visitProfile?user=<%= viewer%>"><button style="text-decoration: none; background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= viewer %></button></a>
-            
-       <% view = viewer %>
-        
-              <!-- <form action="/set" method="POST">
-                <button  id="set" class="button is-link" style="background-color:#828afc;"></button>
-                <script>
-          jQuery(function(){
-             jQuery('#set').click();
-          });
-          </script>
-              </form> -->
-        <!-- <form action="/like" method="POST">
-          <% if(like == 0) {%>
-              <button  id="unlikeBtn" class="button is-link" style="background-color:#828afc;">Unlike</button>
-          <% }if(like == -1) { %>
-            <button id="likeBtn" class="button is-link"  style="background-color:#828afc;color:#fff;margin-bottom:1em" >Like</button>
-            <% } %>
-        </form>  -->
-        
-        <%}%>
-       
-       <% console.log("delete" + view) %>
-        
-    </div>
   
-      <div style="text-align:center;font-size: 1em;" >
-          <form action="http://localhost:8014/example" method="POST">
-            <input hidden type="text" name="fname" value="<%= view %>">
-         <button style="text-decoration: none; background-color: red;color:#fff;font-weight: 700;" id="set" class="button2 form-control"  type="submit">Remove last user</button>
-        </form>  
-      </div>
-            
-    
-  </article>
- 
+  
     <% if(photo){%>  
         <div style="text-align: center;">   
         <img src="data:image/jpg;base64,<%=photo%>" width="300" height="300">
