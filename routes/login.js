@@ -13,16 +13,17 @@ app.get('/', (req, res) => {
 
 app.post('/',urlencodedParser,(req,res) => {
     const hash= crypto.createHash("sha256");
-        hash.update(req.body.enter_password);
-    schema.user.findOne({username: req.body.enter_username}, async function(err, data){
+    hash.update(req.body.enter_password);
+    const username = req.body.enter_username.charAt(0).toUpperCase() + req.body.enter_username.substring(1);
+    schema.user.findOne({username: username}, async function(err, data){
         if (data){
             if(data.verified == true){
-                if (data.username == req.body.enter_username) {
+                if (data.username == username) {
                     pass = hash.digest("hex");
                     console.log(pass);
                     if (data.password == pass){
                         console.log("logged in");
-                        req.session.user = req.body.enter_username;
+                        req.session.user = username;
                         app.locals.errlog = undefined;
                         schema.user.findOneAndUpdate({username: req.session.user},
                             {$set:{status:"online"}}, function(err, data){
