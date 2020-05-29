@@ -12,21 +12,21 @@ app.post('/like', urlencodedParser,async (req, res) => {
     schema.user.findOne({ username: req.session.user }, async function (err, data) {
         if (err) throw err;
         function findIndex(str) {
-            var index = str.indexOf(app.locals.visiting);
+            var index = str.includes(app.locals.visiting);
             return index
         }
         app.locals.liked = data.like;
         app.locals.likedBy = data.likedBy
         var liked = app.locals.liked
-
+        
         var count = findIndex(app.locals.liked);
 console.log('count like value' + count)
-        if (count == '-1') {
+        if (count == false) {
             liked.push(app.locals.visiting);
             console.log('User Profile liked')
             app.locals.count = '0'
         }
-        else if ((count == '1')||(count == '0') ){
+        else if (count == true){
             const index = app.locals.liked.indexOf(count);
 
             liked.splice(index, 1);
@@ -50,7 +50,7 @@ console.log('count like value' + count)
         schema.user.findOne({ username: app.locals.visiting }, async function (err, data) {
             if (err) throw err;
             function findIndex(str) {
-                var index = str.indexOf(req.session.user);
+                var index = str.includes(req.session.user);
                 console.log(index);
                 return index
             }
@@ -60,12 +60,12 @@ console.log('count like value' + count)
 
             var count = findIndex(app.locals.likedBy);
             console.log('count to like or dislike = '+count)
-            if (count == '-1') {
+            if (count == false) {
                 likedBy.push(req.session.user);
                 console.log('User Profile likedBy')
                 app.locals.count = '0'
             }
-            else if (count == '0') {
+            else if (count == true){
                 const index = app.locals.likedBy.indexOf(count);
 
                 likedBy.splice(index, 1);
