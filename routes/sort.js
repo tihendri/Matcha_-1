@@ -7,7 +7,6 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.get('/sort', (req, res) => {
     res.render('sort',{name: req.session.user})
 });
-
 //Sorting
 app.post('/sort', urlencodedParser, (req, res) => {
     schema.user.findOne({ username: req.session.user }, function (err, data) {
@@ -19,14 +18,14 @@ app.post('/sort', urlencodedParser, (req, res) => {
             app.locals.userLength = app.locals.data.username.length;
             var str = []
             function findIndex(str) {
-                var index = str.indexOf(app.locals.visiting);
+                var index = str.includes(app.locals.visiting);
                 return index
             }
             app.locals.like = data.like;
             var str = app.locals.like
 
             var count = findIndex(app.locals.like);
-            if (count == '-1') {
+            if (count == false) {
                 str.push(app.locals.visiting);
             }
             if (app.locals.data.sp == "Heterosexual") {
@@ -49,14 +48,14 @@ app.post('/sort', urlencodedParser, (req, res) => {
                 app.locals.userLength = app.locals.data.username.length;
                 var str = []
                 function findIndex(str) {
-                    var index = str.indexOf(app.locals.visiting);
+                    var index = str.includes(app.locals.visiting);
                     return index
                 }
                 app.locals.like = data.like;
                 var str = app.locals.like
 
                 var count = findIndex(app.locals.like);
-                if (count == '-1') {
+                if (count == false) {
                     str.push(app.locals.visiting);
                 }
                 schema.user.find({ like: req.session.user }, function (err, data) {
@@ -76,7 +75,7 @@ app.post('/sort', urlencodedParser, (req, res) => {
                         gaming: app.locals.data.gaming,
                         username: { $ne: req.session.user }
                     }, function (err, data) {
-                        res.render('home', { locationTest: '1', user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween: app.locals.userAge, userCounty: app.locals.userCountry, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
+                        res.render('home', { locationTest: '1', user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween:  app.locals.data.ageBetween, userCounty: app.locals.userCountry, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
                     }).sort({ age: app.locals.number })
                 } else if (req.body.descAge == 'on') {
                     app.locals.number = '-1'
@@ -90,7 +89,7 @@ app.post('/sort', urlencodedParser, (req, res) => {
                         gaming: app.locals.data.gaming,
                         username: { $ne: req.session.user }
                     }, function (err, data) {
-                        res.render('home', { locationTest: '1', user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween: app.locals.userAge, userCounty: app.locals.userCountry, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
+                        res.render('home', { locationTest: '1', user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween:  app.locals.data.ageBetween, userCounty: app.locals.userCountry, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
                     }).sort({ age: app.locals.number })
                 } else if (req.body.fameRating == 'on') {
                     app.locals.number = '1'
@@ -104,7 +103,7 @@ app.post('/sort', urlencodedParser, (req, res) => {
                         gaming: app.locals.data.gaming,
                         username: { $ne: req.session.user }
                     }, function (err, data) {
-                        res.render('home', { locationTest: '1', user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween: app.locals.userAge, userCounty: app.locals.userCountry, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
+                        res.render('home', { locationTest: '1', user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween:  app.locals.data.ageBetween, userCounty: app.locals.userCountry, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
                     }).sort({ likedBy: app.locals.number })
 
                 } else if (req.body.location == 'on') {
@@ -119,7 +118,7 @@ app.post('/sort', urlencodedParser, (req, res) => {
                         gaming: app.locals.data.gaming,
                         username: { $ne: req.session.user }
                     }, function (err, data) {
-                        res.render('home', { locationSort: '1', locationTest: '1', user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween: app.locals.userAge, userCounty: app.locals.userCountry, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
+                        res.render('home', { locationSort: '1', locationTest: '1', user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween:  app.locals.data.ageBetween, userCounty: app.locals.userCountry, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
                     }
                     )
                 }
@@ -138,7 +137,7 @@ app.post('/sort', urlencodedParser, (req, res) => {
                         username: { $ne: req.session.user }
                     }, function (err, data) {
                         if (data) {
-                            res.render('home', { locationTest: '0', userCity: app.locals.userCity, userPostal: app.locals.userPostal, user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageBetween: app.locals.userAge });
+                            res.render('home', { locationTest: '0', userCity: app.locals.userCity, userPostal: app.locals.userPostal, user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageBetween: app.locals.data.ageBetween});
                         }
                     })
                 }
@@ -154,7 +153,7 @@ app.post('/sort', urlencodedParser, (req, res) => {
                     username: { $ne: req.session.user }
                 }, function (err, data) {
                     if (data) {
-                        res.render('home', { locationTest: '0', userCity: app.locals.userCity, userPostal: app.locals.userPostal, user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageBetween: app.locals.userAge });
+                        res.render('home', { locationTest: '0', userCity: app.locals.userCity, userPostal: app.locals.userPostal, user: data, name: req.session.user, blocked: app.locals.data.blocked, length: app.locals.arrayLength, userLength: app.locals.userLength, ageBetween:  app.locals.data.ageBetween, });
                     }
                 })
             }

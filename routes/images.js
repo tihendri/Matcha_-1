@@ -77,6 +77,7 @@ app.get('/image-upload', (req, res) => {
             res.render('image-upload', {name: req.session.user, galleryLen: app.locals.galleryLen, files: files, username: req.session.user });
         }
     }
+
     )
 });
 

@@ -9,6 +9,8 @@ var upload = multer({ storage: storage });
 
 //Add to Gallery
 app.post('/gallery', urlencodedParser, upload.single('photo'), (req, res) => {
+  
+    if (req.file.buffer) {
     schema.user.findOne({ username: req.session.user }, function (err, data) {
         if (err) throw err;
         var str = []
@@ -16,7 +18,8 @@ app.post('/gallery', urlencodedParser, upload.single('photo'), (req, res) => {
         var i = len;
         var j = 0;
 
-        if (data) {
+        
+            
             while (i) {
                 str.push(data.gallery[j])
                 i--;
@@ -33,19 +36,33 @@ app.post('/gallery', urlencodedParser, upload.single('photo'), (req, res) => {
                     str.push(req.file.buffer.toString('base64'))
                 }
             }
+            if(str.length != 0){
+
             app.locals.galleryImages = str
+
             schema.user.findOneAndUpdate({ username: req.session.user },
                 {
                     $set: {
                         gallery: str
                     }
                 }, async function (err, data) {
-                    if (err) throw err;
+                    if (err) throw console.log('NOT added to Gallery')
+                    res.redirect('profile-page');
+                    
                     console.log('added to Gallery')
                     res.redirect('profile-page')
                 })
-        }
+            
+            }
+        
+        
+        
+        
     })
+}
+
 })
+
+    
 
 module.exports = app;
