@@ -10,6 +10,7 @@ var flash = require('connect-flash')
 const mailer = require('express-mailer');
 const config = require('./config.js')
 const port = config.port;
+var mysql = require('mysql');
 
 //Middleware
 app.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true}));
@@ -69,16 +70,49 @@ app.use(function(err, req, res, next) {
     // HAVE TO CREATE ERROR PAGE!!!!!                                           <----------!!!!!
     res.render('error');
 });
+//Connect to DB mysql
+var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '1234',
+    database: 'Matcha'
+});
+connection.connect(function(error){
+    if(!!error){
+        console.log('ERROR');
+    }else{
 
+        console.log('MySQL Connected...');
+    }
+});
+//create db
+app.get('/createDatabase',(req,res)=>{
+    let sql = "CREATE DATABASE Matcha";
+    connection.query(sql, (err, result)=>{
+        if(err) throw err;
+        console.log(result);
+        res.send("Database created...")
+    })
+})
+//create User Table
+
+app.get('/createUserTable',(req,res)=>{
+    let sql = "CREATE TABLE USERS(ID INT AUTO_INCREMENT,name VARCHAR(100), surname VARCHAR(100),username VARCHAR(100),email VARCHAR(100), password VARCHAR(100),age INT, gender VARCHAR(100), sp VARCHAR(100), bio VARCHAR(100), verified BOOLEAN ,status VARCHAR(100),image VARCHAR(100), vkey VARCHAR(100), sport VARCHAR(10) DEFAULT 'off',fitness VARCHAR(10) DEFAULT 'off',technology VARCHAR(10) DEFAULT 'off', music VARCHAR(10) DEFAULT 'off', gaming VARCHAR(10) DEFAULT 'off', ageBetween VARCHAR(20), liked VARCHAR(200), likedBy VARCHAR(200), viewedBy VARCHAR(200), viewedProfileHistory VARCHAR(200), blocked VARCHAR(200),  city VARCHAR(200), country VARCHAR(200), postal VARCHAR(200),gallery VARCHAR(200),PRIMARY KEY (ID))";
+    connection.query(sql, (err, result)=>{
+        if(err) throw err;
+        console.log(result);
+        res.send("Users Table created...")
+    })
+})
 //Connect to DB
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useUnifiedTopology', true);
-mongoose.connect(
-   process.env.DB_CONNECTION,
-    { useNewUrlParser: true, useUnifiedTopology: true },
-    () => console.log('connected to DB!', '\nServer is up and running!')
-);
+// mongoose.set('useNewUrlParser', true);
+// mongoose.set('useFindAndModify', false);
+// mongoose.set('useUnifiedTopology', true);
+// mongoose.connect(
+//    process.env.DB_CONNECTION,
+//     { useNewUrlParser: true, useUnifiedTopology: true },
+//     () => console.log('connected to DB!', '\nServer is up and running!')
+// );
 
 //How to start listening to the server
 var server = app.listen(port, () => console.log('Server started on port', port));
