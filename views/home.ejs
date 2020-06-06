@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,254 +9,323 @@
     <script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script defer="" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-         
-          
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+        integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+        crossorigin="anonymous"></script>
+
+
 
 </head>
 <script>
 
-document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
 
         // Get all "navbar-burger" elements
         const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-      
+
         // Check if there are any navbar burgers
         if ($navbarBurgers.length > 0) {
-      
-          // Add a click event on each of them
-          $navbarBurgers.forEach( el => {
-            el.addEventListener('click', () => {
-      
-              // Get the target from the "data-target" attribute
-              const target = el.dataset.target;
-              const $target = document.getElementById(target);
-      
-              // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-              el.classList.toggle('is-active');
-              $target.classList.toggle('is-active');
-      
-            });
-          });
-        }
-      
-      });</script>
-<nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-          <a class="navbar-item">
-            <img src="/images/h.png" width="50" height="100">
-          </a>
-        </div>
-          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
-        </div>
-      
-        <div id="navbarBasicExample" class="navbar-menu">
-          <div class="navbar-start">
-            <a href="/chatList"class="navbar-item">
-             Chat List
-            </a>
-      
-            <a href="/profile-page" class="navbar-item">
-              Profile
-            </a>
-      
-            <div class="navbar-item has-dropdown is-hoverable">
-              <a class="navbar-link">
-                More
-              </a>
-      
-              <div class="navbar-dropdown">
-                <a href="/filteredSearch" class="navbar-item">
-                        Filtered Search
-                </a>
-                <a href="/sort" class="navbar-item">
-                  Sort
-                </a>
-                <hr class="navbar-divider">
-               
-              </div>
-            </div>
-          </div>
-      
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="buttons">
-                <a href="/logout" class="button is-primary">
-                  <strong>Sign out</strong>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-   
-      <div id='notif'>
 
+            // Add a click event on each of them
+            $navbarBurgers.forEach(el => {
+                el.addEventListener('click', () => {
+
+                    // Get the target from the "data-target" attribute
+                    const target = el.dataset.target;
+                    const $target = document.getElementById(target);
+
+                    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                    el.classList.toggle('is-active');
+                    $target.classList.toggle('is-active');
+
+                });
+            });
+        }
+
+    });</script>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item">
+            <img src="/images/h.png" width="50" height="100">
+        </a>
     </div>
-   
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+        data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a href="/chatList" class="navbar-item">
+                Chat List
+            </a>
+
+            <a href="/profile-page" class="navbar-item">
+                Profile
+            </a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    More
+                </a>
+
+                <div class="navbar-dropdown">
+                    <a href="/filteredSearch" class="navbar-item">
+                        Filtered Search
+                    </a>
+                    <a href="/sort" class="navbar-item">
+                        Sort
+                    </a>
+                    <hr class="navbar-divider">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a href="/logout" class="button is-primary">
+                        <strong>Sign out</strong>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div id='notif'>
+
+</div>
+
 <body style="height:200vh;background: linear-gradient(#FD4D52, #892B8B);">
-  
-<div  class="wrapper" >
- 
-   
+
+    <div class="wrapper">
+
+
         <!--Don't display Blocked Users-->
-    <% if(locationTest =='1'){%>
+        <% if(locationTest =='1'){%>
         <h1 style="color:#fff"> Sorted Results</h1>
-            <% for(users of user){%>
-                <% var trueval = 0%>
-                <% for(block of blocked){%>
-                    <% if(block == users.username){%>
-                        <% trueval = 1;%>
-                        <% break}%>
-                <% }%>
-                <% if(trueval == '0'){%>
-                    <% if((users.city == userCity) && (users.postal == userPostal)){%>
-                        <% if(users.image){%>  
-                            <div style="text-align: center;">   
-                            <img src="data:image/jpg;base64,<%=users.image%>" width="200" height="200">
-                        </div> 
-                       <%}%>
+        <% for(users of user){%>
+        <% var trueval = 0%>
+        <% for(block of blocked){%>
+        <% if(block == users.username){%>
+        <% trueval = 1;%>
+        <% break}%>
+        <% }%>
+        <% if(trueval == '0'){%>
+        <% if((users.city == userCity) && (users.postal == userPostal)){%>
+        <% if(users.image){%>
+        <div style="text-align: center;">
+            <img src="data:image/jpg;base64,<%=users.image%>" width="200" height="200">
+        </div>
+        <%}%>
                         <% if((ageBetween == '18-25') && (users.age >=18 && users.age <=25)){%>
-                            <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                        <%}%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
                         <% if((ageBetween == '26-35') && (users.age >=26 && users.age <=35)){%>
-                            <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                        <%}%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
                         <% if((ageBetween == '36-45') && (users.age >=36 && users.age <=45)){%>
-                            <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                        <%}%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
                         <% if((ageBetween == '46-55') && (users.age >=46 && users.age <=55)){%>
-                            <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                        <%}%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
                         <% if((ageBetween == '56-older') && (users.age >=56)){%>
-                            <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                        <%}%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
                     <%}%>
-        
-                <%}%>
+
+        <%}%>
         <%}%>
         <% for(users of user){%>
-            <% var trueval = 0%>
-            <% for(block of blocked){%>
-                <% if(block == users.username){%>
-                    <% trueval = 1;%>
-                    <% break}%>
-            <% }%>
-            <% if(trueval == '0'){%>
-                <% if((users.city != userCity) && (users.postal != userPostal)){%>
-                    <% if(users.image){%> 
-                        <div style="text-align: center;">   
-                        <img src="data:image/jpg;base64,<%=users.image%>" width="150" height="150">
-                    </div> 
-                   <%}%>
-                    <% if((ageBetween == '18-25') && (users.age >=18 && users.age <=25)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
-                    <% if((ageBetween == '26-35') && (users.age >=26 && users.age <=35)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
-                    <% if((ageBetween == '36-45') && (users.age >=36 && users.age <=45)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
-                    <% if((ageBetween == '46-55') && (users.age >=46 && users.age <=55)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
-                    <% if((ageBetween == '56-older') && (users.age >=56)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
-                <%}%>
-            <%}%>
+        <% var trueval = 0%>
+        <% for(block of blocked){%>
+        <% if(block == users.username){%>
+        <% trueval = 1;%>
+        <% break}%>
+        <% }%>
+        <% if(trueval == '0'){%>
+        <% if((users.city != userCity) && (users.postal != userPostal)){%>
+        <% if(users.image){%>
+        <div style="text-align: center;">
+            <img src="data:image/jpg;base64,<%=users.image%>" width="150" height="150">
+        </div>
         <%}%>
-    <% }%>
- 
+                    <% if((ageBetween == '18-25') && (users.age >=18 && users.age <=25)){%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
+                    <% if((ageBetween == '26-35') && (users.age >=26 && users.age <=35)){%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
+                    <% if((ageBetween == '36-45') && (users.age >=36 && users.age <=45)){%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
+                    <% if((ageBetween == '46-55') && (users.age >=46 && users.age <=55)){%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
+                    <% if((ageBetween == '56-older') && (users.age >=56)){%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
+                <%}%>
+        <%}%>
+        <%}%>
+        <% }%>
+
         <% if(locationTest == '0'){%>
         <h1 style="color:#fff"> Users in your suburb</h1>
         <hr>
         <% for(users of user){%>
-            <% var trueval = 0%>
-            <% for(block of blocked){%>
-                <% if(block == users.username){%>
-                    <% trueval = 1;%>
-                    <% break}%>
-            <% }%>
-            <% if(trueval == 0){%>
-                <% if((users.city == userCity) && (users.postal == userPostal)){%>
-                    <% if(users.image){%> 
-                        <div style="text-align: center;">   
-                        <img src="data:image/jpg;base64,<%=users.image%>" width="150" height="150">
-                    </div> 
-                   <%}%>
+        <% var trueval = 0%>
+        <% if(blocked != null){%>
+        <% for(block of blocked){%>
+        <% if(block == users.username){%>
+        <% trueval = 1;%>
+        <% break}%>
+        <% }%>
+        <% }%>
+        <% if(trueval == 0){%>
+        <% if((users.city == userCity) && (users.postal == userPostal)){%>
+        <% if(users.image){%>
+        <div style="text-align: center;">
+            <img src="data:image/jpg;base64,<%=users.image%>" width="150" height="150">
+        </div>
+        <%}%>
                     <% if((ageBetween == '18-25') && (users.age >=18 && users.age <=25)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
                     <% if((ageBetween == '26-35') && (users.age >=26 && users.age <=35)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
                     <% if((ageBetween == '36-45') && (users.age >=36 && users.age <=45)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
                     <% if((ageBetween == '46-55') && (users.age >=46 && users.age <=55)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
                     <% if((ageBetween == '56-older') && (users.age >=56)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
                 <%}%>
-            <%}%>
+        <%}%>
         <%}%>
         <br><br><br><br>
         <h1 style="color:#fff"> Users outside your suburb</h1>
-<hr>
+        <hr>
         <% for(users of user){%>
-            <% var trueval = 0%>
-            <% for(block of blocked){%>
-                <% if(block == users.username){%>
-                    <% trueval = 1;%>
-                    <% break}%>
-            <% }%>
-            <% if(trueval == 0){%>
-                <% if((users.city != userCity) && (users.postal != userPostal)){%>
-                    <% if(users.image){%> 
-                        <div style="text-align: center;">   
-                        <img src="data:image/jpg;base64,<%=users.image%>" width="150" height="150">
-                    </div> 
-                   <%}%>
-                    <% if((ageBetween == '18-25') && (users.age >=18 && users.age <=25)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
-                    <% if((ageBetween == '26-35') && (users.age >=26 && users.age <=35)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
-                    <% if((ageBetween == '36-45') && (users.age >=36 && users.age <=45)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
-                    <% if((ageBetween == '46-55') && (users.age >=46 && users.age <=55)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
-                    <% if((ageBetween == '56-older') && (users.age >=56)){%>
-                        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;" href="visitProfile?user=<%= users.username%>"><button style=" background-color: #60b9e2;color:#fff;font-weight: 700;" class="button2 form-control" ><%= users.username %></button></a>
-                    <%}%>
-                <%}%>
-            <%}%>
+        <% var trueval = 0%>
+        <% if(blocked != null){%>
+        <% for(block of blocked){%>
+        <% if(block == users.username){%>
+        <% trueval = 1;%>
+        <% break}%>
+        <% }%>
+        <% }%>
+        <% if(trueval == 0){%>
+        <% if((users.city != userCity) && (users.postal != userPostal)){%>
+        <% if(users.image){%>
+        <div style="text-align: center;">
+            <img src="data:image/jpg;base64,<%=users.image%>" width="150" height="150">
+        </div>
         <%}%>
-    <%}%>
+                    <% if((ageBetween == '18-25') && (users.age >=18 && users.age <=25)){%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
+                    <% if((ageBetween == '26-35') && (users.age >=26 && users.age <=35)){%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
+                    <% if((ageBetween == '36-45') && (users.age >=36 && users.age <=45)){%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
+                    <% if((ageBetween == '46-55') && (users.age >=46 && users.age <=55)){%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
+                    <% if((ageBetween == '56-older') && (users.age >=56)){%>
+        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
+            href="visitProfile?user=<%= users.username%>"><button
+                style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
+                class="button2 form-control"><%= users.username %></button></a>
+        <%}%>
+                <%}%>
+        <%}%>
+        <%}%>
+        <%}%>
     </div>
 
     <input hidden id ="uname" type="text" value="<%=name%>"/>
-    <script src="chats.js"></script>
-    <script src="notif.js"></script>
-  <footer >
-    <div class="content has-text-centered">
-        <p style="color:white;"><strong style="color:white;">Matcha</strong> by J.T.A.B <a href="https://github.com/BrandonSwanepoel/Matcha"></a></p>
-    </div>
-</footer>
+        <script src="chats.js"></script>
+        <script src="notif.js"></script>
+        <footer>
+            <div class="content has-text-centered">
+                <p style="color:white;"><strong style="color:white;">Matcha</strong> by J.T.A.B <a
+                        href="https://github.com/BrandonSwanepoel/Matcha"></a></p>
+            </div>
+        </footer>
 
 </body>

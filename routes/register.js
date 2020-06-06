@@ -57,7 +57,7 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
     hashkey.update(key);
     password = hashpw.digest("hex"),
         vkey = hashkey.digest("hex");
-    getIP(function (err, ip) {
+    await getIP(function (err, ip) {
         var geo = iplocation(ip, [], function (err, res) {
             if (err) throw err;
             //add new user to db
@@ -132,7 +132,6 @@ app.get('/UserAdded', (req, res) => {
 
     connection.query(sqlCheckIFUserExists, username, (err, result) => {
         if (err) throw err;
-        console.log("result =" + result.length);
         if (result.length == 0) {
             connection.query(sql, post, (err, result) => {
                 if (err) throw err;
@@ -169,15 +168,22 @@ app.get('/verify', urlencodedParser, (req, res) => {
     var key = req.query.vkey.toString();
     console.log(key);
     // check why error with { $ne: [vkey, 'null'] },                            <--------!!!!!!!
-    schema.user.findOneAndUpdate({ vkey: key },
-        {
-            $set: {
-                verified: true
-            }
-        }, function (err, data) {
-            if (err) throw err;
-            console.log(data.username + " Has been verified!");
-        })
+    let verifySql = 'UPDATE users SET verified = true WHERE vkey = ?';
+
+    connection.query(verifySql, key, (err, result) => {
+        if (err) throw er;
+        if(result.verified == true){
+            console.log("User has been verified!");
+    }})
+    // schema.user.findOneAndUpdate({ vkey: key },
+    //     {
+    //         $set: {
+    //             verified: true
+    //         }
+    //     }, function (err, data) {
+    //         if (err) throw err;
+            
+    //     })
     res.render('verify');
 });
 module.exports = app;
