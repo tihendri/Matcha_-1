@@ -72,7 +72,8 @@ app.get("/loginUser", async (req, res) => {
             password = result.password;
 
         })
-        if (verified == "1") {
+        console.log(verified);
+        if (verified == true) {
             if (password == loginPassword) {
                 connection.query(updateStatus, async (err, result) => {
                     if (err) throw err;

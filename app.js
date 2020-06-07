@@ -74,9 +74,10 @@ app.use(function(err, req, res, next) {
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '1234',
+    password: 'matcha123',
     database: 'Matcha'
 });
+
 connection.connect(function(error){
     if(!!error){
         console.log('ERROR');
@@ -96,14 +97,40 @@ app.get('/createDatabase',(req,res)=>{
 })
 //create User Table
 
-app.get('/createUserTable',(req,res)=>{
-    let sql = "CREATE TABLE USERS(ID INT AUTO_INCREMENT,name VARCHAR(100), surname VARCHAR(100),username VARCHAR(100),email VARCHAR(100), password VARCHAR(100),age INT, gender VARCHAR(100), sp VARCHAR(100), bio VARCHAR(100), verified BOOLEAN ,status VARCHAR(100),image VARCHAR(100), vkey VARCHAR(100), sport VARCHAR(10) DEFAULT 'off',fitness VARCHAR(10) DEFAULT 'off',technology VARCHAR(10) DEFAULT 'off', music VARCHAR(10) DEFAULT 'off', gaming VARCHAR(10) DEFAULT 'off', ageBetween VARCHAR(20), liked VARCHAR(200), likedBy VARCHAR(200), viewedBy VARCHAR(200), viewedProfileHistory VARCHAR(200), blocked VARCHAR(200),  city VARCHAR(200), country VARCHAR(200), postal VARCHAR(200),gallery VARCHAR(200),PRIMARY KEY (ID))";
+app.get('/createTable',(req,res)=>{
+    let sql = "CREATE TABLE users(user_id INT AUTO_INCREMENT,name VARCHAR(100), surname VARCHAR(100),username VARCHAR(100),email VARCHAR(100), password VARCHAR(100),age INT, gender VARCHAR(100), sp VARCHAR(100), bio VARCHAR(100), verified BOOLEAN DEFAULT false,status VARCHAR(100) DEFAULT 'offline' ,image LONGTEXT, vkey LONGTEXT, sport VARCHAR(10) DEFAULT 'off',fitness VARCHAR(10) DEFAULT 'off',technology VARCHAR(10) DEFAULT 'off', music VARCHAR(10) DEFAULT 'off', gaming VARCHAR(10) DEFAULT 'off', ageBetween VARCHAR(20), city VARCHAR(200), country VARCHAR(200), postal VARCHAR(200),gallery VARCHAR(200),PRIMARY KEY (user_id))";
     connection.query(sql, (err, result)=>{
         if(err) throw err;
-        console.log(result);
-        res.send("Users Table created...")
+        console.log("Users Table created...");
     })
+    let likedTableSql = "CREATE TABLE liked(ID INT AUTO_INCREMENT ,user_id INT not null references users(user_id), username VARCHAR(100), PRIMARY KEY (ID))";
+    connection.query(likedTableSql, (err, result)=>{
+        if(err) throw err;
+        console.log("Liked Table created...");
+    })
+    let likedByTableSql = "CREATE TABLE likedBy (ID INT AUTO_INCREMENT ,user_id INT not null references users(user_id), username VARCHAR(100), PRIMARY KEY (ID))";;
+    connection.query(likedByTableSql, (err, result)=>{
+        if(err) throw err;
+        console.log("LikedBy Table created...");
+    })
+    let viewedByTableSql = "CREATE TABLE viewedBy (ID INT AUTO_INCREMENT , user_id INT not null references users(user_id), username VARCHAR(100), PRIMARY KEY (ID))";
+    connection.query(viewedByTableSql, (err, result)=>{
+        if(err) throw err;
+        console.log("viewedBy Table created...");
+    })
+    let viewedProfileHistoryTableSql = "CREATE TABLE viewedProfileHistory (ID INT AUTO_INCREMENT ,user_id INT not null references users(user_id), username VARCHAR(100), PRIMARY KEY (ID))";
+    connection.query(viewedProfileHistoryTableSql, (err, result)=>{
+        if(err) throw err;
+        console.log("viewedProfileHistoryTableSql Table created...");
+    })
+    let blockedTableSql = "CREATE TABLE blocked(ID INT AUTO_INCREMENT , user_id INT not null references users(user_id), username VARCHAR(100), PRIMARY KEY (ID))";
+    connection.query(blockedTableSql, (err, result)=>{
+        if(err) throw err;
+        console.log("Blocked Table created...");
+    })
+    res.send("Database Tables Created...")
 })
+
 //Connect to DB
 // mongoose.set('useNewUrlParser', true);
 // mongoose.set('useFindAndModify', false);
@@ -173,4 +200,3 @@ io.on('connection',function(socket){
         socket.join(data);
     })
 });
-

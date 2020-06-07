@@ -1,25 +1,28 @@
 var express = require('express');
 var app = express();
-const schema = require('../models/User');
+var mysql = require('mysql');
 
+var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'matcha123',
+    database: 'Matcha'
+});
 app.get('/logout', (req, res) => {
     //last seen
+    var offline = "offline"
     D = new Date();
     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var day = JSON.stringify(D.getDate());
     if (parseInt(day) < 10)
-        day = "0" + day; 
+        day = "0" + day;
     status = "Last Seen: " + JSON.stringify(D.getHours()) + ":" + JSON.stringify(D.getMinutes()) + " - " + JSON.stringify(D.getDate()) + " " + JSON.stringify(months[D.getMonth()]) + " " + JSON.stringify(D.getFullYear())
-    schema.user.findOneAndUpdate({ username: req.session.user },
-        {
-            $set: {
-                status: status
-            }
-        }, function (err, data) {
-            if (err) throw err;
-        })
-    res.redirect('/');
-    destroy.session.user;
+    let updateStatus = `UPDATE users SET status = '${status}' WHERE username = '${req.session.user}'`;
+    connection.query(updateStatus, async (err, result) => {
+        if (err) throw err;
+        console.log("Signed user out")
+        res.redirect('/');
+    })
 })
 
 module.exports = app;

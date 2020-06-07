@@ -127,6 +127,7 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
 app.get('/UserAdded', (req, res) => {
     let post = { image: image, name: name, surname: surname, username: username, password: hexPassword, email: email, age: age, gender: gender, sp: sp, bio: bio, sport: sport, fitness: fitness, technology: technology, music: music, gaming: gaming, ageBetween: ageBetween, vkey: vkey, city: city, country: country, postal: postal };
     let sql = 'INSERT INTO users SET ?';
+   
     var sqlCheckIFUserExists = "SELECT * FROM users WHERE username = ?";
     //checks if user exists and insert user data into db
 
@@ -137,9 +138,48 @@ app.get('/UserAdded', (req, res) => {
                 if (err) throw err;
                 console.log(result);
                 console.log("User created...")
-                res.redirect('/');
+                
+                connection.query(sqlCheckIFUserExists, username, (err, result) => {
+                    if (err) throw err;
+                    var getUser_id;
+                    if (result.length != 0) {
+                        result.forEach(element => {
+                            getUser_id = element.user_id;
+                        });
+                        //Set liked row to null to update later
+                        let setLikedRow = `INSERT INTO liked SET user_id = '${getUser_id}' `
+                        connection.query(setLikedRow, (err, result) => {
+                            if (err) throw err;
+                            console.log('Created liked Row...')
+                        })
+                        //Set likedBy row to null to update later
+                        let setLikedByRow = `INSERT INTO likedBy SET user_id = '${getUser_id}' `
+                        connection.query(setLikedByRow, (err, result) => {
+                            if (err) throw err;
+                            console.log('Created likedBy Row...')
+                        })
+                        //Set blocked row to null to update later
+                        let setBlockedRow = `INSERT INTO blocked SET user_id = '${getUser_id}' `
+                        connection.query(setBlockedRow, (err, result) => {
+                            if (err) throw err;
+                            console.log('Created blocked Row...')
+                        })
+                         //Set viewedBy row to null to update later
+                         let setViewedByRow = `INSERT INTO viewedBy SET user_id = '${getUser_id}' `
+                         connection.query(setViewedByRow, (err, result) => {
+                             if (err) throw err;
+                             console.log('Created viewedBy Row...')
+                         })
+                           //Set viewedProfileHistory row to null to update later
+                           let viewedProfileHistoryRow = `INSERT INTO viewedProfileHistory SET user_id = '${getUser_id}'`
+                           connection.query(viewedProfileHistoryRow, (err, result) => {
+                               if (err) throw err;
+                               console.log('Created viewedBy Row...')
+                           })
+                    }})
+                        
                 //send verification email to user
-
+                res.redirect('/');
                 app.mailer.send('email', {
                     to: email,
                     subject: 'Matcha Registration',
@@ -167,12 +207,13 @@ app.get('/UserAdded', (req, res) => {
 app.get('/verify', urlencodedParser, (req, res) => {
     var key = req.query.vkey.toString();
     console.log(key);
+    let verified = 1;
     // check why error with { $ne: [vkey, 'null'] },                            <--------!!!!!!!
-    let verifySql = 'UPDATE users SET verified = true WHERE vkey = ?';
+    let verifySql = `UPDATE users SET verified = true WHERE vkey = ?`;
 
     connection.query(verifySql, key, (err, result) => {
-        if (err) throw er;
-        if(result.verified == true){
+        if (err) throw err;
+        if(result.verified == 1){
             console.log("User has been verified!");
     }})
     // schema.user.findOneAndUpdate({ vkey: key },
