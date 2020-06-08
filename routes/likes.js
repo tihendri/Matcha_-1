@@ -4,19 +4,20 @@ const schema = require('../models/User');
 const bodyParser = require('body-parser');
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 var mysql = require('mysql');
-var liked = [];
-var likedBy = [];
-var visitingliked = [];
-var visitinglikedBy = [];
-var userliked = [];
-var userlikedBy = [];
+var liked;
+var likedBy;
+var visitinglikedBy;
+var userLiked;
+var userlikedBy;
+var likedByCount;
+var count;
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'matcha123',
     database: 'Matcha'
 });
-//like a profile
+//------------------------------------like a profile----------------------------------------
 app.post('/like', urlencodedParser, async (req, res) => {
     app.locals.visiting = req.session.visiting;
 
@@ -24,115 +25,101 @@ app.post('/like', urlencodedParser, async (req, res) => {
     connection.query(likeInfoSql, async (err, result) => {
         if (result != null) {
             result.forEach(function (result) {
-                userliked.push(result.username);
+                userLiked = result.username;
+                console.log("userliked == " + userLiked);
             })
         }
     })
     let likedByInfoSql = `SELECT * FROM likedBy WHERE user_id = '${req.session.user_id}'`;
-    await connection.query(likedByInfoSql, async (err, result) => {
+    connection.query(likedByInfoSql, async (err, result) => {
         if (err) throw err;
         if (result != null) {
             result.forEach(function (result) {
-                userlikedBy.push(result.username)
+                userlikedBy = result.username
             })
         }
-
-        function findIndex(str) {
+        function findIndexOfUsernameInUserLiked(str) {
             var index = str.includes(app.locals.visiting);
             return index
         }
-        liked = userliked
 
-        if (userliked) {
-            var count = findIndex(userliked);
+        if (userLiked) {
+            count = findIndexOfUsernameInUserLiked(userLiked);
         } else {
             count = false
+            userLiked = '';
         }
-
+        //ADD Username to liked string
         if (count == false) {
-
-            liked.push(app.locals.visiting);
+            liked = userLiked + ',' + app.locals.visiting
             app.locals.count = '0'
             console.log('User Profile liked ')
-
         }
+        //REMOVE Username from liked string
         else if (count == true) {
-            const index = userliked.indexOf(count);
-
-            liked.splice(index, 1);
-            console.log(userliked)
+            liked = userLiked.replace(',' + app.locals.visiting, '')
             app.locals.count = '-1'
             console.log(app.locals.likeOrNot)
             console.log('User Profile is unliked')
-
         }
-    })
 
-    let updateLiked = `UPDATE liked SET username = '${liked}' WHERE user_id = '${req.session.user_id}'`;
-    connection.query(updateLiked, async (err, result) => {
-        if (err) throw err;
-        console.log('User Profile liked or unliked')
-    })
-    //add and remove likedBy
-    //Get visiting user ID
-    let VisitingUserSql = `SELECT * FROM users WHERE username = '${app.locals.visiting}'`;
-    connection.query(VisitingUserSql, async (err, result) => {
-        if (result != null) {
-            result.forEach(function (result) {
-                app.locals.visiting_id = result.user_id;
+        let updateLiked = `UPDATE liked SET username = '${liked}' WHERE user_id = '${req.session.user_id}'`;
+        connection.query(updateLiked, async (err, result) => {
+            if (err) throw err;
+            console.log('User Profile liked or unliked')
+        })
+//--------------------------------------LIKED/UNLIKED DONE-----------------------------
+
+//--------------------------------------ADD or REMOVE likedBy--------------------------
+        //Get visiting user ID
+        let VisitingUserSql = `SELECT * FROM users WHERE username = '${app.locals.visiting}'`;
+        connection.query(VisitingUserSql, async (err, result) => {
+            if (result != null) {
+                result.forEach(function (result) {
+                    app.locals.visiting_id = result.user_id;
+                })
+            }
+            let likedByInfoVisitingUserSql = `SELECT * FROM likedBy WHERE user_id = '${app.locals.visiting_id}'`;
+            connection.query(likedByInfoVisitingUserSql, async (err, result) => {
+                if (err) throw err;
+                if (result != null) {
+                    result.forEach(function (result) {
+                        visitinglikedBy = result.username
+                    })
+                }
             })
-        }
-
-        let likeInfoVisitingUserSql = `SELECT * FROM liked WHERE user_id = '${app.locals.visiting_id}'`;
-        connection.query(likeInfoVisitingUserSql, async (err, result) => {
-            if (result != null) {
-                result.forEach(function (result) {
-                    app.locals.visitingliked = result.username;
-                })
+            function findIndexOfUsernameInLikedBy(str) {
+                var index = str.includes(req.session.user);
+                return index
             }
-        })
-        let likedByInfoVisitingUserSql = `SELECT * FROM likedBy WHERE user_id = '${app.locals.visiting_id}'`;
-        connection.query(likedByInfoVisitingUserSql, async (err, result) => {
-            if (err) throw err;
-            if (result != null) {
-                result.forEach(function (result) {
-                    visitinglikedBy.push(result.username)
-                })
+            if (visitinglikedBy) {
+                likedByCount = findIndexOfUsernameInLikedBy(visitinglikedBy);
+            } else {
+                likedByCount = false;
+                visitinglikedBy = '';
             }
-        })
-        function findIndex(str) {
-            var index = str.includes(req.session.user);
-            return index
-        }
-        likedBy = visitinglikedBy
-        if (visitinglikedBy) {
-            var count = findIndex(visitinglikedBy);
-        } else {
-            var count = false;
-            likedBy = [];
-        }
-        if (count == false) {
-            likedBy.push(req.session.user);
-            app.locals.count = '0'
-            console.log("User Profile is likedBy")
-        }
-        else if (count == true) {
-            const index = visitinglikedBy.indexOf(count);
-
-            likedBy.splice(index, 1);
-            console.log(visitinglikedBy)
-            app.locals.count = '-1'
-            console.log('User Profile is unlikedBy')
-        }
-        console.log("visiting id = " + app.locals.visiting_id)
-        let updateLikedBy = `UPDATE likedBy SET username = '${likedBy}' WHERE user_id = '${app.locals.visiting_id}'`;
-        connection.query(updateLikedBy, async (err, result) => {
-            if (err) throw err;
-            console.log("likedBy or unlikedBy")
-            res.redirect('home');
+            if (likedByCount == false) {
+                likedBy = visitinglikedBy + ',' + req.session.user
+                app.locals.count = '0'
+                console.log("User Profile is likedBy")
+            }
+            else if (likedByCount == true) {
+                likedBy = visitinglikedBy.replace(',' + req.session.user, '')
+                app.locals.count = '-1'
+                console.log('User Profile is unlikedBy')
+            }
+            let updateLikedBy = `UPDATE likedBy SET username = '${likedBy}' WHERE user_id = '${app.locals.visiting_id}'`;
+            connection.query(updateLikedBy, async (err, result) => {
+                if (err) throw err;
+                console.log("likedBy or unlikedBy")
+                res.redirect('home');
+            })
+//----------------------------------------------ADD or REMOVE likedBy DONE--------------------------
         })
     })
+
 })
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/removeLastViewedBy', async (req, res) => {
@@ -208,7 +195,6 @@ app.post('/removeLastViewedHistory', async (req, res) => {
                 console.log("2 " + app.locals.viewer);
                 return index
             }
-
 
 
             //Viewed Profile History

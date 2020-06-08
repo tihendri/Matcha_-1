@@ -34,7 +34,6 @@ app.get('/home', (req, res) => {
             connection.query(updateLocationSql, async (err, result) => {
                 if (err) throw err;
                 console.log("Location Updated");
-
             });
         })
     })
@@ -43,7 +42,6 @@ app.get('/home', (req, res) => {
     connection.query(userInfoSql, async (err, result) => {
         if (err) throw err;
         // if(result.length != 0)
-
         result.forEach(function (result) {
             req.session.user_id = result.user_id;
             app.locals.userAge = result.ageBetween;
@@ -59,10 +57,6 @@ app.get('/home', (req, res) => {
             userObject.music = result.music;
             userObject.technology = result.technology;
            
-            console.log(userObject.sp);
-
-          
-
         })
         let blockedInfoSql = `SELECT * FROM blocked WHERE ID = '${req.session.user_id}'`;
     connection.query(blockedInfoSql, async (err, result) => {
@@ -157,7 +151,6 @@ app.get('/home', (req, res) => {
                     // userArray.push(result.image);
                 })
                 
-                console.log("We are here");
                 // schema.user.find({ like: req.session.user }, function (err, data) {
 
                 // })
@@ -188,9 +181,6 @@ app.get('/home', (req, res) => {
                     usersArray.push(result);
                     
                 })
-
-
-                // console.log(result.username)
                 res.render('home', { locationTest: '0', user: usersArray, name: req.session.user, blocked: blockedUsers, length: app.locals.arrayLength, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween: app.locals.userAge, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
 
             })
