@@ -6,10 +6,17 @@ const Grid = require('gridfs-stream');
 const multer = require('multer');
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
-
+var config = require('../config.js')
+const connection = config.connection;
 //mongo Uri
 const mongoURI = 'mongodb+srv://Matcha:Matcha123@wethinkcode-je391.mongodb.net/Matcha?retryWrites=true&w=majority';
-
+var galleryObject = []
+var viewedHistory;
+var arrayViewedHistory = [];
+var arrayLikeHistory = [];
+var likeHistory;
+var arrayViewedBy = [];
+var viewedBy;
 //Create mongo connection
 const conn = mongoose.createConnection(mongoURI);
 app.locals.count = 1;
@@ -31,7 +38,7 @@ app.get('/image-upload', (req, res) => {
     gfs.files.find().toArray((err, files) => {
         //check if files
         if (!files || files.length == 0) {
-            res.render('image-upload', {name: req.session.user, files: false });
+            res.render('image-upload', { name: req.session.user, files: false });
         } else {
             files.map(files => {
                 if (
@@ -49,7 +56,7 @@ app.get('/image-upload', (req, res) => {
             }
             if (app.locals.errlog == undefined)
                 app.locals.errlog = 'Please fill in the form to login!';
-            res.render('image-upload', {name: req.session.user, files: files });
+            res.render('image-upload', { name: req.session.user, files: files });
         }
     }
     )
@@ -60,7 +67,7 @@ app.get('/image-upload', (req, res) => {
         //check if files
         app.locals.galleryLen = data.gallery.length
         if (!files || files.length == 0) {
-            res.render('image-upload', {name: req.session.user, files: false });
+            res.render('image-upload', { name: req.session.user, files: false });
         } else {
             files.map(files => {
                 if (
@@ -74,29 +81,81 @@ app.get('/image-upload', (req, res) => {
             });
             if (app.locals.errlog == undefined)
                 app.locals.errlog = 'Please fill in the form to login!';
-            res.render('image-upload', {name: req.session.user, galleryLen: app.locals.galleryLen, files: files, username: req.session.user });
+            res.render('image-upload', { name: req.session.user, galleryLen: app.locals.galleryLen, files: files, username: req.session.user });
         }
     }
 
     )
 });
 
-//load home-images
-app.get('/profile-page', (req, res) => {
-    schema.user.findOne({ username: req.session.user }, function (err, data) {
+//------------------------------------------LOAD USER PROFILE--------------------------------
+app.get('/profile-page', async (req, res) => {
+    let userInfoSql = `SELECT * FROM users WHERE username = '${req.session.user}'`;
+    connection.query(userInfoSql, async (err, result) => {
         if (err) throw err;
-        if (data) {
-            app.locals.fameRating = data.likedBy.length
-            app.locals.image = data.image
-            app.locals.galleryImage = data.gallery
-            app.locals.galleryLen = data.gallery.length
-            app.locals.viewedBy = data.viewedBy
-            app.locals.ViewedHistory = data.viewedProfileHistory
-            app.locals.likeHistory = data.like
-console.log("This is the viewed History before profile-page "+app.locals.ViewedHistory)
-        }
-        res.render('profile-page', {like:"0", likeHistory: app.locals.likeHistory, viewedProfileHistory: app.locals.ViewedHistory ,viewedBy: app.locals.viewedBy ,name: req.session.user, galleryLen: app.locals.galleryLen, gallery: app.locals.galleryImage, photo: app.locals.image, username: req.session.user, fameRating: app.locals.fameRating });
-    })
+        result.forEach(function (result) {
+            if (result) {
+                app.locals.image = result.image
+            }
+        })
+        let likedByInfoSql = `SELECT username FROM likedBy WHERE user_id = '${req.session.user_id}'`;
+        connection.query(likedByInfoSql, async (err, result) => {
+            if (err) throw err;
+            if (result) {
+                result.forEach(function (result) {
+                    app.locals.fameRating = ((result.username.split(',').length)-1)
+                })
+            }
+        });
+        let viewedByInfoSql = `SELECT * FROM viewedBy WHERE user_id = '${req.session.user_id}'`;
+        connection.query(viewedByInfoSql, async (err, result) => {
+            if (err) throw err;
+            if (result) {
+                result.forEach(function (result) {
+                    viewedBy = result.username
+                })
+                arrayViewedBy = viewedBy.split(',')
+            }
+        });
+        let viewedProfileHistoryInfoSql = `SELECT * FROM viewedProfileHistory WHERE user_id = '${req.session.user_id}'`;
+        connection.query(viewedProfileHistoryInfoSql, async (err, result) => {
+            if (err) throw err;
+            if (result) {
+                result.forEach(function (result) {
+                    viewedHistory = result.username
+                })
+                arrayViewedHistory = viewedHistory.split(",")
+            }
+        });
+        let likedInfoSql = `SELECT * FROM liked WHERE user_id = '${req.session.user_id}'`;
+        connection.query(likedInfoSql, async (err, result) => {
+            if (err) throw err;
+            if (result) {
+                result.forEach(function (result) {
+                    likeHistory = result.username
+                })
+                arrayLikeHistory = likeHistory.split(",")
+            }
+        });
+        let galleryInfoSql = `SELECT * FROM gallery WHERE user_id = '${req.session.user_id}'`;
+        connection.query(galleryInfoSql, async (err, result) => {
+            if (err) throw err;
+            if (result) {
+                result.forEach(function (result) {
+                    if (result.gallery) {
+                        galleryObject.push(result.gallery)
+                    }
+                })
+                if (galleryObject) {
+                    app.locals.galleryLen = galleryObject.length
+                } else {
+                    app.locals.galleryLen = 0;
+                }
+            }
+            res.render('profile-page', { like: "0", likeHistory: arrayLikeHistory, viewedProfileHistory: arrayViewedHistory, viewedBy: arrayViewedBy, name: req.session.user, galleryLen: app.locals.galleryLen, gallery: galleryObject, photo: app.locals.image, username: req.session.user, fameRating: app.locals.fameRating });
+
+        });
+    });
 });
 //Display image
 app.get('/image/:filename', (req, res) => {
