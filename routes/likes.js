@@ -2,21 +2,15 @@ var express = require('express');
 var app = express();
 const schema = require('../models/User');
 const bodyParser = require('body-parser');
+var config = require('../config.js')
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
-var mysql = require('mysql');
-var liked;
-var likedBy;
+const connection = config.connection;
+
+var liked, userLiked;
 var visitinglikedBy;
-var userLiked;
-var userlikedBy;
-var likedByCount;
-var count;
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'matcha123',
-    database: 'Matcha'
-});
+var userlikedBy, likedBy;
+var likedByCount, count;
+
 //------------------------------------like a profile----------------------------------------
 app.post('/like', urlencodedParser, async (req, res) => {
     app.locals.visiting = req.session.visiting;
@@ -68,9 +62,9 @@ app.post('/like', urlencodedParser, async (req, res) => {
             if (err) throw err;
             console.log('User Profile liked or unliked')
         })
-//--------------------------------------LIKED/UNLIKED DONE-----------------------------
+        //--------------------------------------LIKED/UNLIKED DONE-----------------------------
 
-//--------------------------------------ADD or REMOVE likedBy--------------------------
+        //--------------------------------------ADD or REMOVE likedBy--------------------------
         //Get visiting user ID
         let VisitingUserSql = `SELECT * FROM users WHERE username = '${app.locals.visiting}'`;
         connection.query(VisitingUserSql, async (err, result) => {
@@ -114,112 +108,67 @@ app.post('/like', urlencodedParser, async (req, res) => {
                 console.log("likedBy or unlikedBy")
                 res.redirect('home');
             })
-//----------------------------------------------ADD or REMOVE likedBy DONE--------------------------
+            //----------------------------------------------ADD or REMOVE likedBy DONE--------------------------
         })
     })
 
 })
 
-
+//-------------------------------------------------removeLastViewedBy----------------------
 app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/removeLastViewedBy', async (req, res) => {
     app.locals.viewer = req.body.fname;
-
-    console.log("1 234 " + app.locals.viewer);
-    await schema.user.findOne({ username: req.session.user }, async function (err, data) {
+    var viewedByUpdate;
+    var arrayViewedBy
+    let viewedByInfoSql = `SELECT * FROM viewedBy WHERE user_id = '${req.session.user_id}'`;
+    connection.query(viewedByInfoSql, async (err, result) => {
         if (err) throw err;
-        app.locals.viewedBy = data.viewedBy
-        var viewedBy = app.locals.viewedBy
-        app.locals.viewedLength = app.locals.viewedBy.length
-        console.log("test ViewedBy " + viewedBy)
-        //add and remove viewedBy
-        schema.user.findOne({ username: app.locals.viewer }, async function (err, data) {
-            console.log("test user " + req.session.user);
+        if (result) {
+            result.forEach(function (result) {
+                app.locals.viewedBy = result.username
+            })
+            arrayViewedBy = app.locals.viewedBy.split(',')
+            app.locals.viewedLength = arrayViewedBy.length
+        }
+        viewedByUpdate = app.locals.viewedBy.replace(','+app.locals.viewer, '')
+        app.locals.viewedCount = '-1'
+        let updateviewedBy = `UPDATE viewedBy SET username = '${viewedByUpdate}' WHERE user_id = '${req.session.user_id}'`;
+        connection.query(updateviewedBy, async (err, result) => {
             if (err) throw err;
-            function findIndexOfViewedBy(str) {
-                var index = str.indexOf(app.locals.viewer);
-                console.log(index);
-                console.log("2 " + app.locals.viewer);
-                return index
-            }
-
-            console.log("test ViewedBy " + viewedBy)
-
-            var viewedCount = findIndexOfViewedBy(app.locals.viewedBy);
-            //Viewed Profile History
-
-            console.log("count =" + viewedCount)
-            console.log("countlength =" + app.locals.viewedLength--)
-            //   if (viewedCount == app.locals.viewedLength) {
-            const index = app.locals.viewedBy.indexOf(viewedCount);
-            viewedBy.splice(index, 1);
-            console.log(app.locals.viewedBy)
-            app.locals.viewedCount = '-1'
             console.log('User Profile is unviewedBy')
-            //   }
-            schema.user.findOneAndUpdate({ username: req.session.user },
-                {
-                    $set: {
-                        viewedBy: viewedBy,
-                    }
-                }, async function (err, data) {
-                    if (err) throw err;
-                    res.redirect('profile-page')
-
-                })
-        })
+            res.redirect('profile-page')
+        });
     })
 })
+//--------------------------------------END------------------------------------------------
 
+//------------------------------removeLastViewedHistory---------------------------------
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.post('/removeLastViewedHistory', async (req, res) => {
     app.locals.viewer = req.body.fname;
-
-    console.log("1 234 " + app.locals.viewer);
-    await schema.user.findOne({ username: req.session.user }, async function (err, data) {
+    var viewedProfilesUpdate;
+    var arrayviewedProfiles;
+    let viewedProfilesInfoSql = `SELECT * FROM viewedProfileHistory WHERE user_id = '${req.session.user_id}'`;
+    connection.query(viewedProfilesInfoSql, async (err, result) => {
         if (err) throw err;
-        app.locals.viewedProfiles = data.viewedProfileHistory
-        var viewedProfileHistory = data.viewedProfileHistory
-        app.locals.viewedProfilesLength = data.viewedProfileHistory.length
-
-        console.log("test ViewedHistory " + viewedProfileHistory)
-        //add and remove viewedBy
-        schema.user.findOne({ username: app.locals.viewer }, async function (err, data) {
-            console.log("test user " + req.session.user);
+        if (result) {
+            result.forEach(function (result) {
+                app.locals.viewedProfiles = result.username
+            })
+            arrayviewedProfiles = app.locals.viewedProfiles.split(',')
+        }
+        viewedProfilesUpdate = app.locals.viewedProfiles.replace(','+app.locals.viewer, '')
+        app.locals.viewedProfileHistoryCount= '-1'
+        let updateViewedProfiles = `UPDATE viewedProfileHistory SET username = '${viewedProfilesUpdate}' WHERE user_id = '${req.session.user_id}'`;
+        connection.query(updateViewedProfiles, async (err, result) => {
             if (err) throw err;
-
-            function findIndexOfViewedProfileHistory(str) {
-                var index = str.indexOf(app.locals.viewer);
-                console.log(index);
-                console.log("2 " + app.locals.viewer);
-                return index
-            }
-
-
-            //Viewed Profile History
-            var viewedProfileHistoryCount = findIndexOfViewedProfileHistory(viewedProfileHistory);
-            console.log("count of viewedProfileHistoryCount =" + viewedProfileHistoryCount)
-            console.log(" viewedProfilesLength =" + app.locals.viewedProfilesLength--)
-
-            const index = app.locals.viewedProfiles.indexOf(viewedProfileHistoryCount);
-            viewedProfileHistory.splice(index, 1);
-            app.locals.viewedProfileHistoryCount = '-1'
-            console.log('Last User removed from history')
-
-            schema.user.findOneAndUpdate({ username: req.session.user },
-                {
-                    $set: {
-                        viewedProfileHistory: viewedProfileHistory
-                    }
-                }, async function (err, data) {
-                    if (err) throw err;
-                    res.redirect('profile-page')
-
-                })
-        })
+            console.log('viewedProfiles Updated')
+            res.redirect('profile-page')
+        });
     })
 })
+//----------------------------------------------END------------------------------------------
+
 
 // //like viewer page
 // app.post('/like', urlencodedParser, (req, res) => {
