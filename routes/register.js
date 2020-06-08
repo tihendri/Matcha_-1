@@ -13,7 +13,7 @@ var config = require('../config.js')
 var port = config.port;
 const getIP = require('external-ip')();
 const iplocation = require("iplocation").default;
-var mysql = require('mysql');
+const connection = config.connection;
 
 var image, name, surname, username, hexPassword, email, age, gender, sp, bio, sport, fitness, technology, music, gaming, ageBetween, vkey, city, country, postal;
 mailer.extend(app, {
@@ -27,13 +27,6 @@ mailer.extend(app, {
         pass: 'Matcha123'
     }
 })
-//Connect to DB mysql
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'matcha123',
-    database: 'Matcha'
-});
 
 //Get all Users
 app.get('/register', (req, res) => {
@@ -164,6 +157,13 @@ app.get('/UserAdded', (req, res) => {
                             if (err) throw err;
                             console.log('Created blocked Row...')
                         })
+                        //Set gallery row to null to update later
+
+                        let setGalleryRow = `INSERT INTO gallery SET user_id = '${getUser_id}' `
+                        connection.query(setGalleryRow, (err, result) => {
+                            if (err) throw err;
+                            console.log('Created gallery Row...')
+                        })
                          //Set viewedBy row to null to update later
                          let setViewedByRow = `INSERT INTO viewedBy SET user_id = '${getUser_id}' `
                          connection.query(setViewedByRow, (err, result) => {
@@ -207,7 +207,6 @@ app.get('/UserAdded', (req, res) => {
 app.get('/verify', urlencodedParser, (req, res) => {
     var key = req.query.vkey.toString();
     console.log(key);
-    let verified = 1;
     // check why error with { $ne: [vkey, 'null'] },                            <--------!!!!!!!
     let verifySql = `UPDATE users SET verified = true WHERE vkey = ?`;
 
@@ -216,15 +215,6 @@ app.get('/verify', urlencodedParser, (req, res) => {
         if(result.verified == 1){
             console.log("User has been verified!");
     }})
-    // schema.user.findOneAndUpdate({ vkey: key },
-    //     {
-    //         $set: {
-    //             verified: true
-    //         }
-    //     }, function (err, data) {
-    //         if (err) throw err;
-            
-    //     })
     res.render('verify');
 });
 module.exports = app;

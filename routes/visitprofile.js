@@ -1,7 +1,10 @@
 var express = require('express');
 var app = express();
 const session = require('express-session');
-var mysql = require('mysql');
+var config = require('../config.js')
+const connection = config.connection;
+
+
 var visitingUserObject = {};
 var userViewedHistory, viewedHistory;
 var userLikedBy;
@@ -11,12 +14,7 @@ var userLikesYouCount, count, viewedCount, viewedHistoryCount;
 var vistingViewedBy, viewedBy;
 var connectedTest1, connectedTest2
 
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'matcha123',
-    database: 'Matcha'
-});
+
 //View another persons Page
 app.get('/visitProfile', async (req, res) => {
 
@@ -69,6 +67,7 @@ app.get('/visitProfile', async (req, res) => {
             visitingUserObject.gaming = result.gaming;
             visitingUserObject.music = result.music;
             visitingUserObject.technology = result.technology;
+            visitingUserObject.sport = result.sport;
             visitingUserObject.name = result.name;
             visitingUserObject.surname = result.surname;
             visitingUserObject.username = result.username;
@@ -79,7 +78,15 @@ app.get('/visitProfile', async (req, res) => {
             app.locals.visitingUser = result.username
             req.session.visiting = app.locals.visitingUser
         })
-
+        let likedByInfoSql = `SELECT * FROM likedBy WHERE user_id = '${app.locals.visitingUser_id}'`;
+        connection.query(likedByInfoSql, async (err, result) => {
+            if (err) throw err;
+            if (result != null) {
+                result.forEach(function (result) {
+                    visitingUserObject.fameRating = ((result.username.split(',').length) -1)
+                })
+            }
+        });
 //---------------------------------To get Table data for visiting user---------------------
 
 //-----------------------------------------------START----------------------------------------------
@@ -203,7 +210,7 @@ app.get('/visitProfile', async (req, res) => {
         } else {
             var connected = 0;
         }
-        res.render('visitProfile', { connected: connected, uname: req.session.user, userLikeYou: app.locals.userLikesYouCount, like: app.locals.likeCount, status: visitingUserObject.status, to: req.session.visiting, photo: visitingUserObject.image, name: visitingUserObject.name, surname: visitingUserObject.surname, username: visitingUserObject.username, age: visitingUserObject.age, gender: visitingUserObject.gender, sp: visitingUserObject.sp, bio: visitingUserObject.bio, dislike: visitingUserObject.dislike, sport: visitingUserObject.sport, fitness: visitingUserObject.fitness, technology: visitingUserObject.technology, music: visitingUserObject.music, gaming: visitingUserObject.gaming, fame: app.locals.fame });
+        res.render('visitProfile', { connected: connected, uname: req.session.user, userLikeYou: app.locals.userLikesYouCount, like: app.locals.likeCount, status: visitingUserObject.status, to: req.session.visiting, photo: visitingUserObject.image, name: visitingUserObject.name, surname: visitingUserObject.surname, username: visitingUserObject.username, age: visitingUserObject.age, gender: visitingUserObject.gender, sp: visitingUserObject.sp, bio: visitingUserObject.bio, dislike: visitingUserObject.dislike, sport: visitingUserObject.sport, fitness: visitingUserObject.fitness, technology: visitingUserObject.technology, music: visitingUserObject.music, gaming: visitingUserObject.gaming, fame: visitingUserObject.fameRating });
     })
 })
 

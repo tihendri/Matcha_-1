@@ -3,8 +3,11 @@ var app = express();
 const crypto = require('crypto');
 const schema = require('../models/User');
 const bodyParser = require('body-parser');
-var mysql = require('mysql');
+var config = require('../config.js')
+const connection = config.connection;
+
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 var loginUsername;
 var loginPassword
 app.get('/', (req, res) => {
@@ -13,12 +16,7 @@ app.get('/', (req, res) => {
     res.render('login', { err: app.locals.errlog });
 });
 //Connect to DB mysql
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'matcha123',
-    database: 'Matcha'
-});
+
 app.post('/', urlencodedParser, (req, res) => {
     const hash = crypto.createHash("sha256");
     hash.update(req.body.enter_password);

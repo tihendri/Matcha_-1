@@ -1,13 +1,9 @@
 var express = require('express');
 var app = express();
-var mysql = require('mysql');
+var config = require('../config.js')
+const connection = config.connection;
 
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'matcha123',
-    database: 'Matcha'
-});
+
 app.get('/logout', (req, res) => {
     //last seen
     var offline = "offline"

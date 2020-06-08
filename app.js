@@ -10,7 +10,7 @@ var flash = require('connect-flash')
 const mailer = require('express-mailer');
 const config = require('./config.js')
 const port = config.port;
-var mysql = require('mysql');
+const connection = config.connection;
 
 //Middleware
 app.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true}));
@@ -70,14 +70,8 @@ app.use(function(err, req, res, next) {
     // HAVE TO CREATE ERROR PAGE!!!!!                                           <----------!!!!!
     res.render('error');
 });
-//Connect to DB mysql
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'matcha123',
-    database: 'Matcha'
-});
 
+//Connect to DB mysql
 connection.connect(function(error){
     if(!!error){
         console.log('ERROR');
@@ -102,6 +96,11 @@ app.get('/createTable',(req,res)=>{
     connection.query(sql, (err, result)=>{
         if(err) throw err;
         console.log("Users Table created...");
+    })
+    let galleryTableSql = "CREATE TABLE gallery(ID INT AUTO_INCREMENT ,user_id INT not null references users(user_id), gallery LONGTEXT, PRIMARY KEY (ID))";
+    connection.query(galleryTableSql, (err, result)=>{
+        if(err) throw err;
+        console.log("gallery Table created...");
     })
     let likedTableSql = "CREATE TABLE liked(ID INT AUTO_INCREMENT ,user_id INT not null references users(user_id), username VARCHAR(100), PRIMARY KEY (ID))";
     connection.query(likedTableSql, (err, result)=>{
@@ -131,17 +130,6 @@ app.get('/createTable',(req,res)=>{
     res.send("Database Tables Created...")
 })
 
-//Connect to DB
-// mongoose.set('useNewUrlParser', true);
-// mongoose.set('useFindAndModify', false);
-// mongoose.set('useUnifiedTopology', true);
-// mongoose.connect(
-//    process.env.DB_CONNECTION,
-//     { useNewUrlParser: true, useUnifiedTopology: true },
-//     () => console.log('connected to DB!', '\nServer is up and running!')
-// );
-
-//How to start listening to the server
 var server = app.listen(port, () => console.log('Server started on port', port));
 
 function saveMsg(data) {
