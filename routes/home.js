@@ -34,64 +34,45 @@ app.get('/home', (req, res) => {
         })
     })
     //WEIRD if you don't call this the session user does not update????
-    console.log("Sesion user == "+req.session.user)
+    console.log("Sesion user == " + req.session.user)
     //-----------------------------------------------------------------
     let userInfoSql = `SELECT * FROM users WHERE username = '${req.session.user}'`;
     connection.query(userInfoSql, async (err, result) => {
         if (err) throw err;
-        // if(result.length != 0)
-        result.forEach(function (result) {
-            req.session.user_id = result.user_id;
-            app.locals.userAge = result.ageBetween;
-            app.locals.userCountry = result.country;
-            app.locals.userCity = result.city;
-            app.locals.userPostal = result.postal;
-            // userArray.push(result)
-            userObject.gender = result.gender;
-            userObject.sp = result.sp;
-            userObject.sport = result.sport;
-            userObject.fitness = result.fitness;
-            userObject.gaming = result.gaming;
-            userObject.music = result.music;
-            userObject.technology = result.technology;
-           
-        })
-    let blockedInfoSql = `SELECT * FROM blocked WHERE user_id = '${req.session.user_id}'`;
-    connection.query(blockedInfoSql, async (err, result) => {
-        if (err) throw err;
         if (result) {
-            blockedUsers = [];
             result.forEach(function (result) {
-                blockedUsers.push(result.username)
+                req.session.user_id = result.user_id;
+                app.locals.userAge = result.ageBetween;
+                app.locals.userCountry = result.country;
+                app.locals.userCity = result.city;
+                app.locals.userPostal = result.postal;
+                userObject.gender = result.gender;
+                userObject.sp = result.sp;
+                userObject.sport = result.sport;
+                userObject.fitness = result.fitness;
+                userObject.gaming = result.gaming;
+                userObject.music = result.music;
+                userObject.technology = result.technology;
+
             })
-            console.log("This is the blocked Users == "+blockedUsers)
         }
-    })
-    if (blockedUsers) {
-        app.locals.arrayLength = blockedUsers.length;
+        let blockedInfoSql = `SELECT * FROM blocked WHERE user_id = '${req.session.user_id}'`;
+        connection.query(blockedInfoSql, async (err, result) => {
+            if (err) throw err;
+            if (result) {
+                blockedUsers = [];
+                result.forEach(function (result) {
+                    blockedUsers.push(result.username)
+                })
+                console.log("This is the blocked Users == " + blockedUsers)
+            }
+        })
+        if (blockedUsers) {
+            app.locals.arrayLength = blockedUsers.length;
 
-    }else{
-        app.locals.arrayLength = 0;
-    }
-    // if (userArray.username != null) {
-    //     app.locals.userLength = userArray.username.length;
-    // }else{
-    //     app.locals.userLength = 0;
-    // }
-
-        //Find if user has been liked
-        // var str = []
-        // function findIndex(str) {
-        //     var index = str.indexOf(app.locals.visiting);
-        //     return index
-        // }
-        // app.locals.like = result.like;
-        // var str = app.locals.like
-
-        // var count = findIndex(app.locals.like);
-        // if (count == '-1') {
-        //     str.push(app.locals.visiting);
-        // }
+        } else {
+            app.locals.arrayLength = 0;
+        }
         if (userObject.sp == "Heterosexual") {
             if (userObject.gender == "Male") {
                 app.locals.gender = "Female"
@@ -110,59 +91,26 @@ app.get('/home', (req, res) => {
         }
         if (userObject.sp != "Bisexual") {
             if (blockedUsers) {
-                app.locals.arrayLength =blockedUsers.length;
+                app.locals.arrayLength = blockedUsers.length;
             }
             else {
                 app.locals.arrayLength = 0;
             }
-            // if (userArray.username != null) {
-            //     app.locals.userLength = userArray.username.length;
-            // }
-            // else {
-            //     app.locals.userLength = 0;
-            // }
-            // var str = []
-            // function findIndex(str) {
-            //     var index = str.indexOf(app.locals.visiting);
-            //     return index
-            // }
-            // app.locals.like = result.like;
-            // var str = app.locals.like
-
-            // var count = findIndex(app.locals.like);
-            // if (count == '-1') {
-            //     str.push(app.locals.visiting);
-            // }
 
             count = 0;
             let userInfoSql = `SELECT * FROM users WHERE sp = '${userObject.sp}'AND gender = '${app.locals.gender}' AND sport= '${userObject.sport}' AND fitness='${userObject.fitness}' AND technology = '${userObject.technology}' AND music = '${userObject.music}' AND gaming = '${userObject.gaming}'`;
 
             connection.query(userInfoSql, async (err, result) => {
                 var usersArray = [];
-                
+
                 result.forEach(function (result) {
                     usersArray.push(result);
-                    
-                    // userArray.push(result.image);
                 })
-                
-                // schema.user.find({ like: req.session.user }, function (err, data) {
 
-                // })
-                // schema.user.find({
-                //     sp: app.locals.data.sp,
-                //     gender: app.locals.gender,
-                //     sport: app.locals.data.sport,
-                //     fitness: app.locals.data.fitness,
-                //     technology: app.locals.data.technology,
-                //     music: app.locals.data.music,
-                //     gaming: app.locals.data.gaming,
-                //     username: { $ne: req.session.user }
-                // }, function (err, data) {
                 if (err) throw err;
-                
-                    res.render('home', { user: usersArray, username: req.session.user, locationTest: '0', name: req.session.user, blocked: blockedUsers, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween: app.locals.userAge, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
-                
+
+                res.render('home', { user: usersArray, username: req.session.user, locationTest: '0', name: req.session.user, blocked: blockedUsers, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween: app.locals.userAge, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
+
             })
         }
         else {
@@ -171,10 +119,10 @@ app.get('/home', (req, res) => {
             connection.query(userInfoSql, async (err, result) => {
                 if (err) throw err;
                 var usersArray = [];
-                
+
                 result.forEach(function (result) {
                     usersArray.push(result);
-                    
+
                 })
                 res.render('home', { locationTest: '0', user: usersArray, name: req.session.user, blocked: blockedUsers, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween: app.locals.userAge, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
 
