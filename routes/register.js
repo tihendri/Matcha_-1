@@ -70,7 +70,7 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
 
 
     if (req.body.age >= 18) {
-  
+
         image = req.file.buffer.toString('base64'),
             name = req.body.name,
             surname = req.body.surname,
@@ -120,7 +120,7 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
 app.get('/UserAdded', (req, res) => {
     let post = { image: image, name: name, surname: surname, username: username, password: hexPassword, email: email, age: age, gender: gender, sp: sp, bio: bio, sport: sport, fitness: fitness, technology: technology, music: music, gaming: gaming, ageBetween: ageBetween, vkey: vkey, city: city, country: country, postal: postal };
     let sql = 'INSERT INTO users SET ?';
-   
+
     var sqlCheckIFUserExists = "SELECT * FROM users WHERE username = ?";
     //checks if user exists and insert user data into db
 
@@ -131,7 +131,7 @@ app.get('/UserAdded', (req, res) => {
                 if (err) throw err;
                 console.log(result);
                 console.log("User created...")
-                
+
                 connection.query(sqlCheckIFUserExists, username, (err, result) => {
                     if (err) throw err;
                     var getUser_id;
@@ -164,20 +164,22 @@ app.get('/UserAdded', (req, res) => {
                             if (err) throw err;
                             console.log('Created gallery Row...')
                         })
-                         //Set viewedBy row to null to update later
-                         let setViewedByRow = `INSERT INTO viewedBy SET user_id = '${getUser_id}' `
-                         connection.query(setViewedByRow, (err, result) => {
-                             if (err) throw err;
-                             console.log('Created viewedBy Row...')
-                         })
-                           //Set viewedProfileHistory row to null to update later
-                           let viewedProfileHistoryRow = `INSERT INTO viewedProfileHistory SET user_id = '${getUser_id}'`
-                           connection.query(viewedProfileHistoryRow, (err, result) => {
-                               if (err) throw err;
-                               console.log('Created viewedBy Row...')
-                           })
-                    }})
-                        
+                        //Set viewedBy row to null to update later
+                        let setViewedByRow = `INSERT INTO viewedBy SET user_id = '${getUser_id}' `
+                        connection.query(setViewedByRow, (err, result) => {
+                            if (err) throw err;
+                            console.log('Created viewedBy Row...')
+                        })
+                    
+                        //Set viewedProfileHistory row to null to update later
+                        let viewedProfileHistoryRow = `INSERT INTO viewedProfileHistory SET user_id = '${getUser_id}'`
+                        connection.query(viewedProfileHistoryRow, (err, result) => {
+                            if (err) throw err;
+                            console.log('Created viewedBy Row...')
+                        })
+                    }
+                })
+
                 //send verification email to user
                 res.redirect('/');
                 app.mailer.send('email', {
@@ -212,9 +214,10 @@ app.get('/verify', urlencodedParser, (req, res) => {
 
     connection.query(verifySql, key, (err, result) => {
         if (err) throw err;
-        if(result.verified == 1){
+        if (result.verified == 1) {
             console.log("User has been verified!");
-    }})
+        }
+    })
     res.render('verify');
 });
 module.exports = app;

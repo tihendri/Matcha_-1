@@ -93,6 +93,7 @@ app.get('/profile-page', async (req, res) => {
                 result.forEach(function (result) {
                     viewedBy = result.username
                 })
+                viewedBy = viewedBy.substring(1)
                 arrayViewedBy = viewedBy.split(',')
             }
         });
@@ -103,6 +104,7 @@ app.get('/profile-page', async (req, res) => {
                 result.forEach(function (result) {
                     viewedHistory = result.username
                 })
+                viewedHistory = viewedHistory.substring(1)
                 arrayViewedHistory = viewedHistory.split(",")
             }
         });
@@ -113,6 +115,7 @@ app.get('/profile-page', async (req, res) => {
                 result.forEach(function (result) {
                     likeHistory = result.username
                 })
+                likeHistory = likeHistory.substring(1)
                 arrayLikeHistory = likeHistory.split(",")
             }
         });
