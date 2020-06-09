@@ -1,51 +1,75 @@
 var express = require('express');
 var app = express();
-const chatSchema = require('../models/chat');
-const schema = require('../models/User');
+var config = require('../config.js')
+const connection = config.connection;
 
 //Users you can chat to
 app.get('/chatList', (req, res) => {
-    schema.user.findOne({ username: req.session.user }, function (err, data) {
-        app.locals.databag = data
-        if (data) {
-            res.render('chatList', { name: req.session.user, like: data.like, likedBy: data.likedBy });
+    var userObject = {};
+    var arrayLiked = [];
+    var arrayLikedBy = [];
+
+
+    let likedByInfoSql = `SELECT * FROM likedBy WHERE user_id = '${req.session.user_id}'`;
+    connection.query(likedByInfoSql, async (err, result) => {
+        if (err) throw err;
+        if (result) {
+            result.forEach(function (result) {
+                userObject.likedBy = result.username
+            })
+            arrayLikedBy = userObject.likedBy.split(",")
         }
-    })
+        let likedInfoSql = `SELECT * FROM liked WHERE user_id = '${req.session.user_id}'`;
+        connection.query(likedInfoSql, async (err, result) => {
+            if (err) throw err;
+            if (result) {
+                result.forEach(function (result) {
+                    userObject.liked = result.username
+                })
+                userObject.liked = userObject.liked.substring(1)
+                arrayLiked = userObject.liked.split(",")
+            }
+            res.render('chatList', { name: req.session.user, like: arrayLiked, likedBy: arrayLikedBy });
+        })
+    });
+
 })
 
 //user chat
 app.get('/chat', (req, res) => {
     var user = req.query.user.toString();
-    var chatId = [];
-    chatId.push(user);
-    chatId.push(req.session.user);
-    chatId.sort()
-    app.locals.nameOfusers1 = chatId[0] + chatId[1];
+    var usernames = [];
+    var oldMessages = [];
+    var visitingUserObject = {}
+    var chatID;
+    //Create Chat ID
+    usernames.push(user);
+    usernames.push(req.session.user);
+    usernames.sort()
+    chatID = usernames[0] + usernames[1];
 
-
-    schema.user.findOne({ username: user }, function (err, data) {
-        app.locals.msgTo = data.username;
-        app.locals.status = data.status
+    let visitingUserInfoSql = `SELECT * FROM users WHERE username = '${user}'`;
+    connection.query(visitingUserInfoSql, async (err, result) => {
         if (err) throw err;
-        schema.user.findOne({ username: req.session.user }, async function (err, data) {
-            if (err) throw err;
-
-            function findIndex(str) {
-                var index = str.indexOf(app.locals.chats);
-                console.log(index);
-                return index
+        if (result) {
+            result.forEach(function (result) {
+                visitingUserObject.username = result.username
+                visitingUserObject.status = result.status
+            })
+            //GET all the messages between these users
+            let chatInfoSql = `SELECT * FROM chat WHERE chatId = '${chatID}'`;
+            connection.query(chatInfoSql, async (err, result) => {
+                if (err) throw err;
+                if (result) {
+                    result.forEach(function (result) {
+                        oldMessages.push(result)
+                    })
+                }
+                res.render('chatView', { name: req.session.user, status: visitingUserObject.status, name: req.session.user, oldMessages: oldMessages, chatId: chatID, to: visitingUserObject.username, from: req.session.user })
             }
-            app.locals.liked = data.like;
-
-            app.locals.count = findIndex(app.locals.liked);
-        })
-        chatSchema.chat.find({ chatId: app.locals.nameOfusers1 }, function (err, data) {
-            if (err) throw err;
-
-            res.render('chatView', { name: req.session.user, status: app.locals.status, name: req.session.user, oldMessages: data, chatId: app.locals.nameOfusers1, to: app.locals.msgTo, from: req.session.user })
-        })
-    });
-});
-
+            )
+        }
+    })
+})
 
 module.exports = app;

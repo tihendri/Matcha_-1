@@ -102,10 +102,12 @@ socket.on('show_notification', function (data) {
         <div id="chat-window">
  
                         <div id="output">
-                           
+                           <%if(oldMessages) {%>
                             <% for(old of oldMessages){%>
-   <p><strong><%= old.from%> : </strong><%=old.msg%></p>
+   <p><strong><%= old.fromUser%> : </strong><%=old.msg%></p>
                               <% }%>
+                              <% }%>
+
             </div>
        
             <div id="feedback"></div>

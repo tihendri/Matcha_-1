@@ -90,7 +90,6 @@ app.get('/createDatabase',(req,res)=>{
     })
 })
 //create User Table
-
 app.get('/createTable',(req,res)=>{
     let sql = "CREATE TABLE users(user_id INT AUTO_INCREMENT,name VARCHAR(100), surname VARCHAR(100),username VARCHAR(100),email VARCHAR(100), password VARCHAR(100),age INT, gender VARCHAR(100), sp VARCHAR(100), bio VARCHAR(100), verified BOOLEAN DEFAULT false,status VARCHAR(100) DEFAULT 'offline' ,image LONGTEXT, vkey LONGTEXT, sport VARCHAR(10) DEFAULT 'off',fitness VARCHAR(10) DEFAULT 'off',technology VARCHAR(10) DEFAULT 'off', music VARCHAR(10) DEFAULT 'off', gaming VARCHAR(10) DEFAULT 'off', ageBetween VARCHAR(20), city VARCHAR(200), country VARCHAR(200), postal VARCHAR(200),PRIMARY KEY (user_id))";
     connection.query(sql, (err, result)=>{
@@ -122,6 +121,11 @@ app.get('/createTable',(req,res)=>{
         if(err) throw err;
         console.log("viewedProfileHistoryTableSql Table created...");
     })
+    let chatTableSql = "CREATE TABLE chat(ID INT AUTO_INCREMENT ,chatId VARCHAR(100),ToUser VARCHAR(100), fromUser VARCHAR(100),msg LONGTEXT,created VARCHAR(100), PRIMARY KEY (ID))";
+    connection.query(chatTableSql, (err, result)=>{
+        if(err) throw err;
+        console.log("chat Table created...")
+    })
     let blockedTableSql = "CREATE TABLE blocked(ID INT AUTO_INCREMENT , user_id INT not null references users(user_id), username VARCHAR(100), PRIMARY KEY (ID))";
     connection.query(blockedTableSql, (err, result)=>{
         if(err) throw err;
@@ -133,8 +137,11 @@ app.get('/createTable',(req,res)=>{
 var server = app.listen(port, () => console.log('Server started on port', port));
 
 function saveMsg(data) {
-    chatSchema.chat({ chatId: data.chatId, from: data.from, msg: data.message, to: data.to }).save(function (err) {
-    });
+    let setViewedByRow = `INSERT INTO chat SET chatId = '${data.chatId}', fromUser = '${data.from}',toUser = '${data.to}',msg = '${data.message}',created = '${Date()}' `
+    connection.query(setViewedByRow, (err, result) => {
+        if (err) throw err;
+        console.log('Messaged saved...')
+    })
 };
 
 function notif_mail(from, to, notif) {
