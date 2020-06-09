@@ -41,7 +41,6 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
     //validate password
     //  if (validate.checkPassword(req.body.password)) {
     //hash password and vkey
-    var usersInDatabase = []
     username = req.body.username.charAt(0).toUpperCase() + req.body.username.substring(1);
     var password = req.body.password;
     var key = req.body.username + Date.now();
@@ -51,23 +50,7 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
     hashkey.update(key);
     password = hashpw.digest("hex"),
         vkey = hashkey.digest("hex");
-    getIP(function (err, ip) {
-        var geo = iplocation(ip, [], function (err, res) {
-            if (err) throw err;
-            //add new user to db
-            if (err) throw err;
 
-            if (res.city) {
-                app.locals.city = res.city;
-            }
-            if (res.country) {
-                app.locals.country = res.country;
-            }
-            if (res.postal) {
-                app.locals.postal = res.postal;
-            }
-        })
-    })
 
     if (req.body.age >= 18) {
         var sqlCheckIfUserExists = `SELECT username FROM users WHERE username = '${req.body.username}'`;
@@ -93,6 +76,8 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
                         // res.redirect('/');
 
                     } else {
+                     
+
                         app.locals.erreg = null;
                         image = req.file.buffer.toString('base64'),
                             name = req.body.name,
@@ -114,9 +99,9 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
                             city = app.locals.city,
                             country = app.locals.country,
                             postal = app.locals.postal
+
                         console.log("Postal code = " + app.locals.postal)
                         res.redirect('/UserAdded');
-
                     }
                 })
             }
@@ -132,88 +117,107 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
 })
 
 
-app.get('/UserAdded', (req, res) => {
+app.get('/UserAdded',async (req, res) => {
     let post = { image: image, name: name, surname: surname, username: username, password: hexPassword, email: email, age: age, gender: gender, sp: sp, bio: bio, sport: sport, fitness: fitness, technology: technology, music: music, gaming: gaming, ageBetween: ageBetween, vkey: vkey, city: city, country: country, postal: postal };
     let sql = 'INSERT INTO users SET ?';
 
-    var sqlCheckIFUserExists = "SELECT * FROM users WHERE username = ?";
+    var getUserIDSql = `SELECT * FROM users WHERE username = '${username}'`;
     //checks if user exists and insert user data into db
-
-    connection.query(sqlCheckIFUserExists, username, (err, result) => {
+    connection.query(sql, post, (err, result) => {
         if (err) throw err;
-        if (result.length == 0) {
-            connection.query(sql, post, (err, result) => {
-                if (err) throw err;
-                console.log(result);
-                console.log("User created...")
-
-                connection.query(sqlCheckIFUserExists, username, (err, result) => {
+        console.log("User created...")
+        connection.query(getUserIDSql, (err, result) => {
+            if (err) throw err;
+            var getUser_id;
+            if (result.length != 0) {
+                result.forEach(element => {
+                    getUser_id = element.user_id;
+                });
+                //Set liked row to null to update later
+                let setLikedRow = `INSERT INTO liked SET user_id = '${getUser_id}' `
+                connection.query(setLikedRow, (err, result) => {
                     if (err) throw err;
-                    var getUser_id;
-                    if (result.length != 0) {
-                        result.forEach(element => {
-                            getUser_id = element.user_id;
-                        });
-                        //Set liked row to null to update later
-                        let setLikedRow = `INSERT INTO liked SET user_id = '${getUser_id}' `
-                        connection.query(setLikedRow, (err, result) => {
-                            if (err) throw err;
-                            console.log('Created liked Row...')
-                        })
-                        //Set likedBy row to null to update later
-                        let setLikedByRow = `INSERT INTO likedBy SET user_id = '${getUser_id}' `
-                        connection.query(setLikedByRow, (err, result) => {
-                            if (err) throw err;
-                            console.log('Created likedBy Row...')
-                        })
-                        //Set blocked row to null to update later
-                        let setBlockedRow = `INSERT INTO blocked SET user_id = '${getUser_id}' `
-                        connection.query(setBlockedRow, (err, result) => {
-                            if (err) throw err;
-                            console.log('Created blocked Row...')
-                        })
-                        //Set gallery row to null to update later
+                    console.log('Created liked Row...')
+                })
+                //Set likedBy row to null to update later
+                let setLikedByRow = `INSERT INTO likedBy SET user_id = '${getUser_id}' `
+                connection.query(setLikedByRow, (err, result) => {
+                    if (err) throw err;
+                    console.log('Created likedBy Row...')
+                })
+                //Set blocked row to null to update later
+                let setBlockedRow = `INSERT INTO blocked SET user_id = '${getUser_id}' `
+                connection.query(setBlockedRow, (err, result) => {
+                    if (err) throw err;
+                    console.log('Created blocked Row...')
+                })
+                //Set gallery row to null to update later
 
-                        let setGalleryRow = `INSERT INTO gallery SET user_id = '${getUser_id}' `
-                        connection.query(setGalleryRow, (err, result) => {
-                            if (err) throw err;
-                            console.log('Created gallery Row...')
-                        })
-                        //Set viewedBy row to null to update later
-                        let setViewedByRow = `INSERT INTO viewedBy SET user_id = '${getUser_id}' `
-                        connection.query(setViewedByRow, (err, result) => {
-                            if (err) throw err;
-                            console.log('Created viewedBy Row...')
-                        })
-
-                        //Set viewedProfileHistory row to null to update later
-                        let viewedProfileHistoryRow = `INSERT INTO viewedProfileHistory SET user_id = '${getUser_id}'`
-                        connection.query(viewedProfileHistoryRow, (err, result) => {
-                            if (err) throw err;
-                            console.log('Created viewedBy Row...')
-                        })
-                    }
+                let setGalleryRow = `INSERT INTO gallery SET user_id = '${getUser_id}' `
+                connection.query(setGalleryRow, (err, result) => {
+                    if (err) throw err;
+                    console.log('Created gallery Row...')
+                })
+                //Set viewedBy row to null to update later
+                let setViewedByRow = `INSERT INTO viewedBy SET user_id = '${getUser_id}' `
+                connection.query(setViewedByRow, (err, result) => {
+                    if (err) throw err;
+                    console.log('Created viewedBy Row...')
                 })
 
-                //send verification email to user
-                res.redirect('/');
-                app.mailer.send('email', {
-                    to: email,
-                    subject: 'Matcha Registration',
-                    vkey: vkey,
-                    port: port
-                }, function (err) {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    console.log('Registration email sent to ' + username);
+                //Set viewedProfileHistory row to null to update later
+                let viewedProfileHistoryRow = `INSERT INTO viewedProfileHistory SET user_id = '${getUser_id}'`
+                connection.query(viewedProfileHistoryRow, (err, result) => {
+                    if (err) throw err;
+                    console.log('Created viewedBy Row...')
                 })
-                console.log("Added user to DB!")
+            }
+        })
+     
+    
+       
+        //send verification email to user
+        res.redirect('/');
+        app.mailer.send('email', {
+            to: email,
+            subject: 'Matcha Registration',
+            vkey: vkey,
+            port: port
+        }, function (err) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            console.log('Registration email sent to ' + username);
+        })
+        console.log("Added user to DB!")
+    })
+    await getIP(function (err, ip) {
+        var geo = iplocation(ip, [], function (err, res) {
+            if (err) throw err;
+            //add new user to db
+            if (err) throw err;
+            if (res.city) {
+                app.locals.city = res.city;
+            }
+            if (res.country) {
+                app.locals.country = res.country;
+            }
+            if (res.postal) {
+                app.locals.postal = res.postal;
+                console.log("Postal code = " + app.locals.postal)
+            }
+            console.log("Postal code = " + app.locals.postal)
+            let updateLocationSQL = `UPDATE users SET city = '${app.locals.city}',country ='${app.locals.country}',postal ='${app.locals.postal}' WHERE username ='${username}'`
+            connection.query(updateLocationSQL, (err, result) => {
+              
+                if (err) throw err;
+                console.log('Updated location...')
             })
-        }
-    });
-});
+        })
+    })
+}
+)
 
 //verify user account
 app.get('/verify', urlencodedParser, (req, res) => {
