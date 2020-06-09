@@ -64,7 +64,6 @@ app.get('/home', (req, res) => {
                 result.forEach(function (result) {
                     blockedUsers.push(result.username)
                 })
-                console.log("This is the blocked Users == " + blockedUsers)
             }
         })
         if (blockedUsers) {
