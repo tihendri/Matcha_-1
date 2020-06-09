@@ -82,7 +82,9 @@ app.get('/profile-page', async (req, res) => {
             if (err) throw err;
             if (result) {
                 result.forEach(function (result) {
+                    if(result.username){
                     app.locals.fameRating = ((result.username.split(',').length) - 1)
+                    }
                 })
             }
         });
@@ -91,10 +93,14 @@ app.get('/profile-page', async (req, res) => {
             if (err) throw err;
             if (result) {
                 result.forEach(function (result) {
+                    
                     viewedBy = result.username
                 })
+                if(viewedBy){
+
                 viewedBy = viewedBy.substring(1)
                 arrayViewedBy = viewedBy.split(',')
+                }
             }
         });
         let viewedProfileHistoryInfoSql = `SELECT * FROM viewedProfileHistory WHERE user_id = '${req.session.user_id}'`;
@@ -104,8 +110,10 @@ app.get('/profile-page', async (req, res) => {
                 result.forEach(function (result) {
                     viewedHistory = result.username
                 })
+                if(viewedHistory){
                 viewedHistory = viewedHistory.substring(1)
                 arrayViewedHistory = viewedHistory.split(",")
+                }
             }
         });
         let likedInfoSql = `SELECT * FROM liked WHERE user_id = '${req.session.user_id}'`;
@@ -115,8 +123,10 @@ app.get('/profile-page', async (req, res) => {
                 result.forEach(function (result) {
                     likeHistory = result.username
                 })
+                if(likeHistory){
                 likeHistory = likeHistory.substring(1)
                 arrayLikeHistory = likeHistory.split(",")
+                }
             }
         });
         let galleryInfoSql = `SELECT * FROM gallery WHERE user_id = '${req.session.user_id}'`;

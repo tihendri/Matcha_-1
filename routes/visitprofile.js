@@ -97,7 +97,9 @@ app.get('/visitProfile', async (req, res) => {
             if (err) throw err;
             if (result) {
                 result.forEach(function (result) {
+                    if(result.username){
                     visitingUserObject.fameRating = ((result.username.split(',').length) -1)
+                    }
                 })
             }
         });
@@ -194,10 +196,12 @@ app.get('/visitProfile', async (req, res) => {
             viewedBy = vistingViewedBy + ',' + req.session.user;
             console.log('ADDED logged in user to viewedBy')
         }
+        if(viewedBy){
         let updateViewedBy = `UPDATE viewedBy SET username = '${viewedBy}' WHERE user_id = '${visitingUserObject.user_id}'`;
         connection.query(updateViewedBy, async (err, result) => {
             if (err) throw err;
         })
+    }
 //---------------------------------------------ADD viewedBy DONE------------------------------------------
 
 //---------------------------------------------ADD ViewedHistory------------------------------------------

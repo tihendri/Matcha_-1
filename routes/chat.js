@@ -17,7 +17,9 @@ app.get('/chatList', (req, res) => {
             result.forEach(function (result) {
                 userObject.likedBy = result.username
             })
+            if(userObject.likedBy){
             arrayLikedBy = userObject.likedBy.split(",")
+            }
         }
         let likedInfoSql = `SELECT * FROM liked WHERE user_id = '${req.session.user_id}'`;
         connection.query(likedInfoSql, async (err, result) => {
@@ -26,13 +28,14 @@ app.get('/chatList', (req, res) => {
                 result.forEach(function (result) {
                     userObject.liked = result.username
                 })
+                if(userObject.liked){
                 userObject.liked = userObject.liked.substring(1)
                 arrayLiked = userObject.liked.split(",")
+                }
             }
             res.render('chatList', { name: req.session.user, like: arrayLiked, likedBy: arrayLikedBy });
         })
     });
-
 })
 
 //user chat
