@@ -8,11 +8,13 @@ const connection = config.connection;
 var visitingUserObject = {};
 var userViewedHistory, viewedHistory;
 var userLikedBy;
+var userBlocked;
 var userLiked;
 var visitingLiked;
-var userLikesYouCount, count, viewedCount, viewedHistoryCount;
+var userLikesYouCount, count, viewedCount, viewedHistoryCount,blockedCount;
 var vistingViewedBy, viewedBy;
 var connectedTest1, connectedTest2
+var user
 
 
 //View another persons Page
@@ -25,25 +27,34 @@ app.get('/visitProfile', async (req, res) => {
     let likeInfoSql = `SELECT * FROM liked WHERE user_id = '${req.session.user_id}'`;
     connection.query(likeInfoSql, async (err, result) => {
         if (err) throw err;
-        if (result != null) {
+        if (result) {
             result.forEach(function (result) {
                 userLiked = result.username
             })
         }
     })
-    let likedByInfoSql = `SELECT * FROM likedBy WHERE user_id = '${req.session.user}'`;
+    let likedByInfoSql = `SELECT * FROM likedBy WHERE user_id = '${req.session.user_id}'`;
     connection.query(likedByInfoSql, async (err, result) => {
         if (err) throw err;
-        if (result != null) {
+        if (result) {
             result.forEach(function (result) {
                 userLikedBy = result.username
             })
         }
     })
-    let viewedProfileHistoryInfoSql = `SELECT * FROM viewedProfileHistory WHERE user_id = '${req.session.user}'`;
+    let blockedInfoSql = `SELECT * FROM blocked WHERE user_id = '${req.session.user_id}'`;
+    connection.query(blockedInfoSql, async (err, result) => {
+        if (err) throw err;
+        if (result) {
+            result.forEach(function (result) {
+                userBlocked = result.username
+            })
+        }
+    })
+    let viewedProfileHistoryInfoSql = `SELECT * FROM viewedProfileHistory WHERE user_id = '${req.session.user_id}'`;
     connection.query(viewedProfileHistoryInfoSql, async (err, result) => {
         if (err) throw err;
-        if (result != null) {
+        if (result) {
             result.forEach(function (result) {
                 userViewedHistory = result.username
             })
@@ -53,7 +64,10 @@ app.get('/visitProfile', async (req, res) => {
 //-------------------------------END OF TABLE SET----------------------------------------
     
 //-------------------Get visiting user info and set a object with the data-------------------------
-    var user = req.query.user.toString();
+    if(!user){
+         user = req.query.user.toString();
+    }
+
     req.session.visiting = user
     let visitinUserInfoSql = `SELECT * FROM users WHERE username = '${user}'`;
     connection.query(visitinUserInfoSql, async (err, result) => {
@@ -73,15 +87,15 @@ app.get('/visitProfile', async (req, res) => {
             visitingUserObject.username = result.username;
             visitingUserObject.age = result.age;
             visitingUserObject.gender = result.gender;
-            visitingUserObject.fame = result.fame;
             visitingUserObject.bio = result.bio;
+            visitingUserObject.image = result.image;
             app.locals.visitingUser = result.username
             req.session.visiting = app.locals.visitingUser
         })
         let likedByInfoSql = `SELECT * FROM likedBy WHERE user_id = '${app.locals.visitingUser_id}'`;
         connection.query(likedByInfoSql, async (err, result) => {
             if (err) throw err;
-            if (result != null) {
+            if (result) {
                 result.forEach(function (result) {
                     visitingUserObject.fameRating = ((result.username.split(',').length) -1)
                 })
@@ -94,7 +108,7 @@ app.get('/visitProfile', async (req, res) => {
         let likeInfoSql = `SELECT * FROM liked WHERE user_id = '${app.locals.visitingUser_id}'`;
         connection.query(likeInfoSql, async (err, result) => {
             if (err) throw err;
-            if (result != null) {
+            if (result) {
                 result.forEach(function (result) {
                     visitingLiked = result.username;
                 })
@@ -103,21 +117,20 @@ app.get('/visitProfile', async (req, res) => {
         let viewedByInfoSql = `SELECT * FROM viewedBy WHERE user_id = '${app.locals.visitingUser_id}'`;
         connection.query(viewedByInfoSql, async (err, result) => {
             if (err) throw err;
-            if (result != null) {
+            if (result) {
                 result.forEach(function (result) {
                     vistingViewedBy = result.username;
                 })
             }
         })
 //---------------------------------END OF TABLE SET---------------------------
-
-        console.log("visitingUser " + req.session.visiting)
-        function findIndex(str) {
+        //Check if Logged In user has liked the Visiting user
+        function findIndexOfUserInLiked(str) {
             var index = str.includes(req.session.visiting);
             return index
         }
         if (userLiked) {
-            count = findIndex(userLiked);
+            count = findIndexOfUserInLiked(userLiked);
         } else {
             count = false
         }
@@ -126,6 +139,24 @@ app.get('/visitProfile', async (req, res) => {
         }
         else if (count == false) {
             app.locals.likeCount = '-1'
+        }
+
+        //Check if Logged In user has blocked the Visiting user
+        function findIndexOfUserInBlocked(str) {
+            var index = str.includes(req.session.visiting);
+            return index
+        }
+        if (userBlocked) {
+            blockedCount = findIndexOfUserInBlocked(userBlocked);
+            console.log("this is the blockedCount == "+blockedCount)
+        } else {
+            blockedCount = false
+        }
+        if (blockedCount == true) {
+            app.locals.blockedCount = '0'
+        }
+        else if (blockedCount == false) {
+            app.locals.blockedCount = '-1'
         }
 
         //Check if the user you are visiting has liked your profile
@@ -210,10 +241,9 @@ app.get('/visitProfile', async (req, res) => {
         } else {
             var connected = 0;
         }
-        res.render('visitProfile', { connected: connected, uname: req.session.user, userLikeYou: app.locals.userLikesYouCount, like: app.locals.likeCount, status: visitingUserObject.status, to: req.session.visiting, photo: visitingUserObject.image, name: visitingUserObject.name, surname: visitingUserObject.surname, username: visitingUserObject.username, age: visitingUserObject.age, gender: visitingUserObject.gender, sp: visitingUserObject.sp, bio: visitingUserObject.bio, dislike: visitingUserObject.dislike, sport: visitingUserObject.sport, fitness: visitingUserObject.fitness, technology: visitingUserObject.technology, music: visitingUserObject.music, gaming: visitingUserObject.gaming, fame: visitingUserObject.fameRating });
+        res.render('visitProfile', { connected: connected, uname: req.session.user, userLikeYou: app.locals.userLikesYouCount, like: app.locals.likeCount, blocked: app.locals.blockedCount , status: visitingUserObject.status, to: req.session.visiting, photo: visitingUserObject.image, name: visitingUserObject.name, surname: visitingUserObject.surname, username: visitingUserObject.username, age: visitingUserObject.age, gender: visitingUserObject.gender, sp: visitingUserObject.sp, bio: visitingUserObject.bio, dislike: visitingUserObject.dislike, sport: visitingUserObject.sport, fitness: visitingUserObject.fitness, technology: visitingUserObject.technology, music: visitingUserObject.music, gaming: visitingUserObject.gaming, fame: visitingUserObject.fameRating });
     })
 })
-
 
 //Display Visiters Gallery
 // app.get('/visitingGallery', (req, res) => {
