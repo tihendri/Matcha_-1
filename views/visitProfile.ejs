@@ -48,7 +48,7 @@
   });</script>
 
 
-<nav style="padding-left: 0;"class="navbar" role="navigation" aria-label="main navigation">
+<nav style="padding-left: 0;" class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item">
       <img src="/images/h.png" width="50" height="100">
@@ -94,9 +94,9 @@
 
 </div>
 
-<input hidden id="from" type="text" value='<%=uname%>'/>
-  <input hidden id="to" type="text" value='<%=to%>'/>
-  <!-- <% if(userLikeYou == 1){%>
+<input hidden id="from" type="text" value='<%=uname%>' />
+<input hidden id="to" type="text" value='<%=to%>' />
+<!-- <% if(userLikeYou == 1){%>
     <article style=" float: right; text-align: center;" class="message is-link" >
   
       <div   style="background-color: grey">
@@ -112,93 +112,97 @@
       </div>
     </article>
     <% }%> -->
+
 <body style="padding-bottom:4em;height:auto;background: linear-gradient(#FD4D52, #892B8B);">
 
-<table>
-  <tr>
-    <td>
-      <div  style= "padding-left:0;margin-top:2em">
-    <form action="/reportUser" method="POST">
-      <button class="button is-link" style="background-color:#ff0000;color:#fff;margin-bottom:1em">Report User</button>
-    </form>
-    </div>
-  </td>
-  <td>
-    <div  style=" padding-left:0;margin-top:2em">
-    <a href="visitingGallery"><button class="button is-link"
-        style="background-color:#828afc;color:#fff;margin-bottom:1em" id="view"
-        value="<%= username %>">Gallery</button></a>
-        
-      </td>
-      <td>
-    <!-- Like button -->
-    <div  style="padding-left:0;margin-top:2em">
-    <form action="/like" method="POST">
-      <% if(like == 0) {%>
-      <button id="unlikeBtn" class="button is-link" style="background-color:#828afc;color:#fff;margin-bottom:1em"
-        value="<%= username %>">Unlike</button>
-      <% }if(like == -1) { %>
-      <button id="likeBtn" class="button is-link" style="background-color:#828afc;color:#fff;margin-bottom:1em"
-        value="<%= username %>">Like</button>
-      <% } %>
-    </form>
-  </div>
-  </td>
-  <td>
-    <div  style="padding-left:0; margin-top:2em">
-    <form action="/dislike" method="POST">
-      <button class="button is-link" style="background-color:#828afc;color:#fff" value="<%= username %>">Block</button>
-    </form>
-  </div>
-  </td>
-  </tr>
-</table>
-<% if (connected == 1) { %>
-<table>
+  <table>
     <tr>
       <td>
-          <button class="button is-primary" style="color:#fff;margin-top:1em">You are connected with <%= to %></button>
+        <div style="padding-left:0;margin-top:2em">
+          <form action="/reportUser" method="POST">
+            <button class="button is-link" style="background-color:#ff0000;color:#fff;margin-bottom:1em">Report
+              User</button>
+          </form>
+        </div>
+      </td>
+      <td>
+        <div style=" padding-left:0;margin-top:2em">
+          <a href="visitingGallery"><button class="button is-link"
+              style="background-color:#828afc;color:#fff;margin-bottom:1em" id="view"
+              value="<%= username %>">Gallery</button></a>
+
+      </td>
+      <td>
+        <!-- Like button -->
+        <div style="padding-left:0;margin-top:2em">
+          <form action="/like" method="POST">
+            <% if(like == 0) {%>
+            <button id="unlikeBtn" class="button is-link" style="background-color:#828afc;color:#fff;margin-bottom:1em"
+              value="<%= username %>">Unlike</button>
+            <% }if(like == -1) { %>
+            <button id="likeBtn" class="button is-link" style="background-color:#828afc;color:#fff;margin-bottom:1em"
+              value="<%= username %>">Like</button>
+            <% } %>
+          </form>
+        </div>
+      </td>
+      <td>
+        <div style="padding-left:0; margin-top:2em">
+          <form action="/dislike" method="POST">
+            <% if(blocked == 0) {%>
+            <button class="button is-link" style="background-color:#828afc;color:#fff"
+              value="<%= username %>">Unblock</button>
+            <% }if(blocked == -1) { %>
+            <button class="button is-link" style="background-color:#828afc;color:#fff"
+              value="<%= username %>">Block</button>
+            <% } %>
+          </form>
+        </div>
       </td>
     </tr>
-</table>
-<% } %>
-
-    <!-- disLike button -->
-    <div class="wrapper">
-   
-     
-        <button  id="viewBtn" class="button is-link" style="background-color:#828afc;color:#fff;margin-bottom:1em; visibility: hidden;" value="<%= username %>"></button>
-        <script>
-          jQuery(function(){
-             jQuery('#viewBtn').click();
-          });
-          </script>
-  
-
+  </table>
+  <% if (connected == 1) { %>
+  <table>
+    <tr>
+      <td>
+        <button class="button is-primary" style="color:#fff;margin-top:1em">You are connected with <%= to %></button>
+      </td>
+    </tr>
+  </table>
+  <% } %>
+  <div class="wrapper">
+    <button id="viewBtn" class="button is-link"
+      style="background-color:#828afc;color:#fff;margin-bottom:1em; visibility: hidden;"
+      value="<%= username %>"></button>
+    <script>
+      jQuery(function () {
+        jQuery('#viewBtn').click();
+      });
+    </script>
     <div class="field">
       <div class="profile-img">
-      
+
         <% if(photo){%>
         <img src="data:image/jpg;base64,<%=photo%>" width="200" height="200">
         <%}%>
         <% if(photo == null){%>
-          <img src="../images/profile_image_holder.png" width="200" height="200">
-          <% }%>
-        </div>
-     
+        <img src="../images/profile_image_holder.png" width="200" height="200">
+        <% }%>
+      </div>
+
       <label class="label" style="color:white; ;">Name</label>
-        <div class="control">
-          <label class="input" type="text" name="name"><%= name%></label></div>
+      <div class="control">
+        <label class="input" type="text" name="name"><%= name%></label></div>
 
       <div class="field">
         <label class="label" style="color:white; ;">Surname</label>
         <div class="control">
           <label class="input" type="text" name="surname"><%= surname%></label></div>
-      
-      <div class="field">
-        <label class="label" style="color:white;">Username</label>
-        <label class="input is-success" type="text" name="username"><%= username%></label>
-      </div>
+
+        <div class="field">
+          <label class="label" style="color:white;">Username</label>
+          <label class="input is-success" type="text" name="username"><%= username%></label>
+        </div>
       </div>
 
       <!-- <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
