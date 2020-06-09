@@ -19,6 +19,6 @@ app.get('/logout', (req, res) => {
         console.log("Signed user out")
         res.redirect('/');
     })
+    req.session.destroy();
 })
-
 module.exports = app;
