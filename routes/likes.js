@@ -106,7 +106,7 @@ app.post('/like', urlencodedParser, async (req, res) => {
             connection.query(updateLikedBy, async (err, result) => {
                 if (err) throw err;
                 console.log("likedBy or unlikedBy")
-                res.redirect('home');
+                res.redirect('visitProfile');
             })
             //----------------------------------------------ADD or REMOVE likedBy DONE--------------------------
         })
@@ -130,7 +130,7 @@ app.post('/removeLastViewedBy', async (req, res) => {
             arrayViewedBy = app.locals.viewedBy.split(',')
             app.locals.viewedLength = arrayViewedBy.length
         }
-        viewedByUpdate = app.locals.viewedBy.replace(','+app.locals.viewer, '')
+        viewedByUpdate = app.locals.viewedBy.replace(',' + app.locals.viewer, '')
         app.locals.viewedCount = '-1'
         let updateviewedBy = `UPDATE viewedBy SET username = '${viewedByUpdate}' WHERE user_id = '${req.session.user_id}'`;
         connection.query(updateviewedBy, async (err, result) => {
@@ -157,8 +157,8 @@ app.post('/removeLastViewedHistory', async (req, res) => {
             })
             arrayviewedProfiles = app.locals.viewedProfiles.split(',')
         }
-        viewedProfilesUpdate = app.locals.viewedProfiles.replace(','+app.locals.viewer, '')
-        app.locals.viewedProfileHistoryCount= '-1'
+        viewedProfilesUpdate = app.locals.viewedProfiles.replace(',' + app.locals.viewer, '')
+        app.locals.viewedProfileHistoryCount = '-1'
         let updateViewedProfiles = `UPDATE viewedProfileHistory SET username = '${viewedProfilesUpdate}' WHERE user_id = '${req.session.user_id}'`;
         connection.query(updateViewedProfiles, async (err, result) => {
             if (err) throw err;
@@ -249,83 +249,94 @@ app.post('/removeLastViewedHistory', async (req, res) => {
 //     })
 // })
 
-app.get('/viewed', urlencodedParser, (req, res) => {
-    app.locals.visiting = req.session.visiting;
 
-    schema.user.findOne({ username: req.session.user }, async function (err, data) {
-        if (err) throw err;
+// app.get('/viewed', urlencodedParser, (req, res) => {
+//     app.locals.visiting = req.session.visiting;
+
+//      schema.user.findOne({ username: req.session.user }, async function (err, data) {
+//          if (err) throw err;
 
 
-        //add and remove viewedBy
-        schema.user.findOne({ username: app.locals.visiting }, async function (err, data) {
+//         //add and remove viewedBy
+//         //schema.user.findOne({ username: app.locals.visiting }, async function (err, data) {
+//             var arrayviewedProfiles;
+//             let viewedProfilesInfoSql = `SELECT * FROM viewedProfileHistory WHERE user_id = '${req.session.user_id}'`;
+//             connection.query(viewedProfilesInfoSql, async (err, result) => {
+//                 if (err) throw err;
+//                 if (result) {
+//                     result.forEach(function (result) {
+//                         app.locals.viewedProfiles = result.username
+//                     })
+//                     arrayviewedProfiles = app.locals.viewedProfiles.split(',')
+//                 }
+//             if (err) throw err;
+//             function findIndex(str) {
+//                 var index = str.indexOf(req.session.user);
+//                 console.log(index);
+//                 return index
+//             }
+//             app.locals.viewedBy = data.viewedBy
+//             var viewedBy = app.locals.viewedBy
 
-            if (err) throw err;
-            function findIndex(str) {
-                var index = str.indexOf(req.session.user);
-                console.log(index);
-                return index
-            }
-            app.locals.viewedBy = data.viewedBy
-            var viewedBy = app.locals.viewedBy
+//             var viewedCount = findIndex(app.locals.viewedBy);
+//             if (viewedCount == '-1') {
+//                 viewedBy.push(req.session.user);
+//                 console.log('User Profile viewewdBy')
+//                 app.locals.viewedCount = '0'
+//             }
+//             schema.user.findOneAndUpdate({ username: app.locals.visiting },
+//                 {
+//                     $set: {
+//                         viewedBy: viewedBy
+//                     }
+//                 }, async function (err, data) {
+//                     if (err) throw err;
 
-            var viewedCount = findIndex(app.locals.viewedBy);
-            if (viewedCount == '-1') {
-                viewedBy.push(req.session.user);
-                console.log('User Profile viewewdBy')
-                app.locals.viewedCount = '0'
-            }
-            schema.user.findOneAndUpdate({ username: app.locals.visiting },
-                {
-                    $set: {
-                        viewedBy: viewedBy
-                    }
-                }, async function (err, data) {
-                    if (err) throw err;
-
-                })
-        })
-    })
-    res.off();
-})
+//                 })
+//         })
+//     })
+//     res.off();
+// })
 
 //block a profile
 app.post('/dislike', urlencodedParser, (req, res) => {
-    schema.user.findOne({ username: req.session.user }, async function (err, data) {
+    //schema.user.findOne({ username: req.session.user }, async function (err, data) {
+    // if (err) throw err;
+    var blockedUserCount
+    var blockedUsers
+    let blockedUsersInfoSql = `SELECT * FROM blocked WHERE user_id = '${req.session.user_id}'`
+    connection.query(blockedUsersInfoSql, async (err, result) => {
         if (err) throw err;
-        app.locals.visiting = req.session.visiting;
-        function findIndex(str) {
-            var index = str.indexOf(app.locals.visiting);
+        if (result) {
+            result.forEach(function (result) {
+                app.locals.blocked = result.username
+            })
+        }
+        function findIndexOfLoggedInUserInBlockedUsers(str) {
+            var index = str.includes(req.session.visiting);
             return index
         }
-        var str
-        if (data.blocked) {
-            app.locals.blocked = data.blocked;
-            str = app.locals.blocked
-            var count = findIndex(app.locals.blocked);
-            if (count == '-1') {
-                str.push(app.locals.visiting);
-                console.log('User Profile blocked')
-            }
-            else {
-                const index = app.locals.blocked.indexOf(count);
-                app.locals.blocked.splice(index, 1);
-                console.log('User Profile is unblocked')
-            }
+        if (app.locals.blocked) {
+            blockedUserCount = findIndexOfLoggedInUserInBlockedUsers(app.locals.blocked);
+
+        } else {
+            blockedUserCount = false;
+            app.locals.blocked = '';
         }
-        else {
-            str.push(app.locals.visiting);
+        if (blockedUserCount == false) {
+            blockedUsers = app.locals.blocked + ',' + req.session.visiting
             console.log('User Profile blocked')
         }
-        schema.user.findOneAndUpdate({ username: req.session.user },
-            {
-                $set: {
-                    blocked: str
-                }
-            }, async function (err, data) {
-                if (err) throw err;
-
-                res.redirect('home');
-            })
+        else if (blockedUserCount == true) {
+            blockedUsers = app.locals.blocked.replace(','+req.session.visiting, '')
+            console.log('User Profile is unblocked')
+        }
+        let updateBlockedUsers = `UPDATE blocked SET username = '${blockedUsers}' WHERE user_id = '${req.session.user_id}'`;
+        connection.query(updateBlockedUsers, async (err, result) => {
+            if (err) throw err;
+            console.log('blocked Users Updated')
+            res.redirect('home');
+        });
     })
 })
 
