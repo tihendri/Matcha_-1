@@ -50,7 +50,7 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
     hashkey.update(key);
     password = hashpw.digest("hex"),
         vkey = hashkey.digest("hex");
-    await getIP(function (err, ip) {
+    getIP(function (err, ip) {
         var geo = iplocation(ip, [], function (err, res) {
             if (err) throw err;
             //add new user to db
