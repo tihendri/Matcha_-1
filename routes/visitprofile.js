@@ -214,8 +214,10 @@ app.get('/visitProfile', async (req, res) => {
             userViewedHistory = '';
         }
         if (viewedHistoryCount == false) {
-            viewedHistory = userViewedHistory + ',' + req.session.visiting;
-            console.log('ADDED user you are visiting to viewedProfileHistory')
+            if(req.session.visiting != "undefined"){
+                viewedHistory = userViewedHistory + ',' + req.session.visiting;
+                console.log('ADDED user you are visiting to viewedProfileHistory')
+            }
         }
         let updateviewedProfileHistory = `UPDATE viewedProfileHistory SET username = '${viewedHistory}' WHERE user_id = '${req.session.user_id}'`;
         connection.query(updateviewedProfileHistory, async (err, result) => {

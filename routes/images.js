@@ -141,6 +141,7 @@ app.get('/profile-page', async (req, res) => {
         connection.query(galleryInfoSql, async (err, result) => {
             if (err) throw err;
             if (result) {
+                galleryObject = [];
                 result.forEach(function (result) {
                     if (result.gallery) {
                         galleryObject.push(result.gallery)
