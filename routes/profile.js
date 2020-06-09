@@ -194,8 +194,7 @@ app.post('/profile', upload.single('photo'), urlencodedParser, (req, res) => {
         connection.query(updateUserProfile, async (err, result) => {
             if (err) throw err;
             req.session.user = username;
-
-            if (req.body.email != userObject.email && req.body.email != null) {
+            if ((email != userObject.email) && (req.body.email != null)) {
                 var key = req.session.user + Date.now();
                 const hashkey = crypto.createHash("sha256");
                 hashkey.update(key);
@@ -215,8 +214,9 @@ app.post('/profile', upload.single('photo'), urlencodedParser, (req, res) => {
                         }
                         console.log('Registration email sent to ' + req.session.user);
                     })
+                    res.redirect('/logout');
+
                 })
-                res.redirect('/logout');
             } else {
                 console.log('User Profile Updated')
                 res.redirect('/profile-page');
