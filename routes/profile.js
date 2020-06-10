@@ -24,6 +24,9 @@ mailer.extend(app, {
     }
 })
 app.get('/profile', (req, res) => {
+    if (app.locals.erreg == undefined) {
+        app.locals.erreg = 'You can change your profile info here!';
+    }
     var userObject = {};
     //-----------------------------------------Get Logged In User info-----------------------------------------
     let userInfoSql = `SELECT * FROM users WHERE username = '${req.session.user}'`;
@@ -52,11 +55,13 @@ app.get('/profile', (req, res) => {
             if (err) throw err;
             if (result) {
                 result.forEach(function (result) {
-                    userObject.fameRating = result.username.split(',').length
+                    if (result.username) {
+                        userObject.fameRating = result.username.split(',').length
+                    }
                 })
             }
         });
-        res.render('profile', { name: userObject.name, surname: userObject.surname, username: userObject.username, password: "******", email: userObject.email, age: userObject.age, gender: userObject.gender, sp: userObject.sp, bio: userObject.bio, fameRating: userObject.fameRating, sport: userObject.sport, fitness: userObject.fitness, technology: userObject.technology, music: userObject.music, gaming: userObject.gaming });
+        res.render('profile', { erreg: app.locals.erreg, name: userObject.name, surname: userObject.surname, username: userObject.username, password: "******", email: userObject.email, age: userObject.age, gender: userObject.gender, sp: userObject.sp, bio: userObject.bio, fameRating: userObject.fameRating, sport: userObject.sport, fitness: userObject.fitness, technology: userObject.technology, music: userObject.music, gaming: userObject.gaming });
     });
 });
 //Update Profile
@@ -190,38 +195,63 @@ app.post('/profile', upload.single('photo'), urlencodedParser, (req, res) => {
         else {
             image = userObject.image;
         }
-        let updateUserProfile = `UPDATE users SET name = '${name}',surname = '${surname}',username = '${username}',password = '${pass}',email = '${email}',age = '${age}',gender = '${gender}',sp = '${sp}',image = '${image}',bio = '${bio}',ageBetween = '${ageBetween}',sport = '${sport}',fitness = '${fitness}',technology = '${technology}',music = '${music}',gaming = '${gaming}' WHERE user_id = '${req.session.user_id}'`;
-        connection.query(updateUserProfile, async (err, result) => {
+        var sqlCheckIfUserExists = `SELECT username FROM users WHERE username = '${req.body.username}'`;
+        connection.query(sqlCheckIfUserExists, (err, result) => {
             if (err) throw err;
-            req.session.user = username;
-            if ((email != userObject.email) && (req.body.email != null)) {
-                var key = req.session.user + Date.now();
-                const hashkey = crypto.createHash("sha256");
-                hashkey.update(key);
-                vkey = hashkey.digest("hex");
-                let updateEmail = `UPDATE users SET verified = false , vkey = '${vkey}' WHERE username = '${req.session.user}'`;
-                connection.query(updateEmail, async (err, result) => {
-                    if (err) throw err;
-                    app.mailer.send('email', {
-                        to: app.locals.changedEmail,
-                        subject: 'Matcha Registration',
-                        vkey: vkey,
-                        port: port
-                    }, function (err) {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
-                        console.log('Registration email sent to ' + req.session.user);
-                    })
-                    res.redirect('/logout');
-
-                })
+            if ((result.length != 0)&&(userObject.username != req.body.username)){
+                    console.log(req.body.email);
+                    console.log("Username Exists!");
+                    app.locals.erreg = 'Username Exists!';
+                    res.render('profile', { erreg: app.locals.erreg, name: userObject.name, surname: userObject.surname, username: userObject.username, password: "******", email: userObject.email, age: userObject.age, gender: userObject.gender, sp: userObject.sp, bio: userObject.bio, fameRating: userObject.fameRating, sport: userObject.sport, fitness: userObject.fitness, technology: userObject.technology, music: userObject.music, gaming: userObject.gaming });
             } else {
-                console.log('User Profile Updated')
-                res.redirect('/profile-page');
-            }
+                var sqlCheckIfEmailExists = `SELECT email FROM users WHERE email = '${req.body.email}'`;
+                //checks if user exists and insert user data into db
+                app.locals.erreg = null;
 
+                connection.query(sqlCheckIfEmailExists, (err, result) => {
+                    if (err) throw err;
+                    if ((result.length != 0) && (userObject.email != req.body.email)) {
+                            console.log(req.body.email);
+                            console.log("Email Exists!");
+                            app.locals.erreg = 'Email Exists!';
+                            res.render('profile', { erreg: app.locals.erreg, name: userObject.name, surname: userObject.surname, username: userObject.username, password: "******", email: userObject.email, age: userObject.age, gender: userObject.gender, sp: userObject.sp, bio: userObject.bio, fameRating: userObject.fameRating, sport: userObject.sport, fitness: userObject.fitness, technology: userObject.technology, music: userObject.music, gaming: userObject.gaming });
+                    } else {
+                        let updateUserProfile = `UPDATE users SET name = '${name}',surname = '${surname}',username = '${username}',password = '${pass}',email = '${email}',age = '${age}',gender = '${gender}',sp = '${sp}',image = '${image}',bio = '${bio}',ageBetween = '${ageBetween}',sport = '${sport}',fitness = '${fitness}',technology = '${technology}',music = '${music}',gaming = '${gaming}' WHERE user_id = '${req.session.user_id}'`;
+                        connection.query(updateUserProfile, async (err, result) => {
+                            if (err) throw err;
+                            req.session.user = username;
+                            if ((email != userObject.email) && (req.body.email != null)) {
+                                var key = req.session.user + Date.now();
+                                const hashkey = crypto.createHash("sha256");
+                                hashkey.update(key);
+                                vkey = hashkey.digest("hex");
+                                let updateEmail = `UPDATE users SET verified = false , vkey = '${vkey}' WHERE username = '${req.session.user}'`;
+                                connection.query(updateEmail, async (err, result) => {
+                                    if (err) throw err;
+                                    app.mailer.send('email', {
+                                        to: app.locals.changedEmail,
+                                        subject: 'Matcha Registration',
+                                        vkey: vkey,
+                                        port: port
+                                    }, function (err) {
+                                        if (err) {
+                                            console.log(err);
+                                            return;
+                                        }
+                                        console.log('Registration email sent to ' + req.session.user);
+                                    })
+                                    res.redirect('/logout');
+
+                                })
+                            } else {
+                                console.log('User Profile Updated')
+                                res.redirect('/profile-page');
+                            }
+
+                        })
+                    }
+                })
+            }
         })
     })
 })
