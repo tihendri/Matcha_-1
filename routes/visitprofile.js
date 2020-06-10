@@ -89,8 +89,7 @@ app.get('/visitProfile', async (req, res) => {
             visitingUserObject.gender = result.gender;
             visitingUserObject.bio = result.bio;
             visitingUserObject.image = result.image;
-            app.locals.visitingUser = result.username
-            req.session.visiting = app.locals.visitingUser
+            req.session.visiting = result.username
         })
         let likedByInfoSql = `SELECT * FROM likedBy WHERE user_id = '${app.locals.visitingUser_id}'`;
         connection.query(likedByInfoSql, async (err, result) => {

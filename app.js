@@ -1,9 +1,6 @@
 const express = require('express');
 const session = require('express-session');
 const app = express();
-const mongoose = require('mongoose');
-const chatSchema = require('./models/chat');
-const schema = require('./models/User');
 require('dotenv/config');
 var socket = require('socket.io');
 var flash = require('connect-flash')
@@ -43,6 +40,7 @@ app.use(require('./routes/profile.js'));
 app.use(require('./routes/sort.js'));
 app.use(require('./routes/changeLocation.js'));
 app.use(require('./routes/chat.js'));
+app.use(require('./routes/visitProfileGallery.js'));
 app.use(require('./routes/visitprofile.js'));
 app.use(require('./routes/filtersearch.js'));
 app.use(require('./routes/gallery.js'));
@@ -143,31 +141,33 @@ function saveMsg(data) {
         console.log('Messaged saved...')
     })
 };
-
+////////////////////////////UNCOMMENT THIS !!!///////////////////////
+//-----------------------JUST A LAS WITH ALL THE EMAILS--------------------------
 function notif_mail(from, to, notif) {
-    var userEmail;
-    let userInfoSql = `SELECT * FROM users WHERE username = '${to}'`;
-    connection.query(userInfoSql, async (err, result) => {
-        if (err) throw err;
-        if (result) {
-            result.forEach(function (result) {
-                userEmail = result.email
-            })
-            app.mailer.send('notif', {
-                to: userEmail,
-                subject: 'Matcha - Notification from ' + from,
-                from: from,
-                notif: notif
-            }, function (err) {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                console.log('Notification email sent to ' + to);
-            })
-        }
-    })
+    // var userEmail;
+    // let userInfoSql = `SELECT * FROM users WHERE username = '${to}'`;
+    // connection.query(userInfoSql, async (err, result) => {
+    //     if (err) throw err;
+    //     if (result) {
+    //         result.forEach(function (result) {
+    //             userEmail = result.email
+    //         })
+    //         app.mailer.send('notif', {
+    //             to: userEmail,
+    //             subject: 'Matcha - Notification from ' + from,
+    //             from: from,
+    //             notif: notif
+    //         }, function (err) {
+    //             if (err) {
+    //                 console.log(err);
+    //                 return;
+    //             }
+    //             console.log('Notification email sent to ' + to);
+    //         })
+    //     }
+    // })
 }
+//------------------------------------------UNCOMMENT TOP----------------
 
 //Socket setup
 var io = socket(server);

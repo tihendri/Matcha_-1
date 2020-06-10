@@ -9,7 +9,7 @@ var upload = multer({ storage: storage });
 var config = require('../config.js')
 const connection = config.connection;
 //mongo Uri
-const mongoURI = 'mongodb+srv://Matcha:Matcha123@wethinkcode-je391.mongodb.net/Matcha?retryWrites=true&w=majority';
+// const mongoURI = 'mongodb+srv://Matcha:Matcha123@wethinkcode-je391.mongodb.net/Matcha?retryWrites=true&w=majority';
 var galleryObject = []
 var viewedHistory;
 var arrayViewedHistory = [];
@@ -22,11 +22,11 @@ var viewedBy;
 app.locals.count = 1;
 
 //Init gfs
-let gfs;
-connection.once('open', () => {
-    gfs = Grid(conn.db, mongoose.mongo);
-    gfs.collection('uploads');
-})
+// let gfs;
+// connection.once('open', () => {
+//     gfs = Grid(conn.db, mongoose.mongo);
+//     gfs.collection('uploads');
+// })
 
 //render Profile upload page
 app.get('/profilePic', (req, res) => {
