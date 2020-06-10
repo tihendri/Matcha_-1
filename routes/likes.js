@@ -168,136 +168,7 @@ app.post('/removeLastViewedHistory', async (req, res) => {
     })
 })
 //----------------------------------------------END------------------------------------------
-
-
-// //like viewer page
-// app.post('/like', urlencodedParser, (req, res) => {
-//     app.locals.visiting = req.session.viewer;
-//     console.log("hello "+app.locals.visiting)
-//     schema.user.findOne({ username: req.session.user }, async function (err, data) {
-//         if (err) throw err;
-//         function findIndex(str) {
-//             var index = str.indexOf(app.locals.visiting);
-//             return index
-//         }
-//         app.locals.liked = data.like;
-//         app.locals.likedBy = data.likedBy
-//         var liked = app.locals.liked
-
-//         var count = findIndex(app.locals.liked);
-
-//         if (count == '-1') {
-//             liked.push(app.locals.visiting);
-//             console.log('User Profile liked')
-//             app.locals.count = '0'
-//         }
-//         else if (count == '0') {
-//             const index = app.locals.liked.indexOf(count);
-
-//             liked.splice(index, 1);
-//             req.session.user.spl
-//             console.log(app.locals.liked)
-//             app.locals.count = '-1'
-//             console.log(app.locals.likeOrNot)
-//             console.log('User Profile is unliked')
-//         }
-//         schema.user.findOneAndUpdate({ username: req.session.user },
-//             {
-//                 $set: {
-//                     like: liked
-//                 }
-//             }, function (err, data) {
-//                 if (err) throw err;
-//             }).then(() => {})
-
-//         //add and remove likedBy
-//         schema.user.findOne({ username: app.locals.visiting }, async function (err, data) {
-//             if (err) throw err;
-//             function findIndex(str) {
-//                 var index = str.indexOf(req.session.user);
-//                 console.log(index);
-//                 return index
-//             }
-//             app.locals.liked = data.like;
-//             app.locals.likedBy = data.likedBy
-//             var likedBy = app.locals.likedBy
-
-//             var count = findIndex(app.locals.likedBy);
-//             if (count == '-1') {
-//                 likedBy.push(req.session.user);
-//                 console.log('User Profile likedBy')
-//                 app.locals.count = '0'
-//             }
-//             else if (count == '0') {
-//                 const index = app.locals.likedBy.indexOf(count);
-
-//                 likedBy.splice(index, 1);
-//                 console.log(app.locals.likedBy)
-//                 app.locals.count = '-1'
-//                 console.log('User Profile is unlikedBy')
-//             }
-//             schema.user.findOneAndUpdate({ username: app.locals.visiting },
-//                 {
-//                     $set: {
-//                         likedBy: likedBy
-//                     }
-//                 }, async function (err, data) {
-//                     if (err) throw err;
-//                     res.redirect('home');
-//                 })
-//         })
-//     })
-// })
-
-
-// app.get('/viewed', urlencodedParser, (req, res) => {
-//     app.locals.visiting = req.session.visiting;
-
-//      schema.user.findOne({ username: req.session.user }, async function (err, data) {
-//          if (err) throw err;
-
-
-//         //add and remove viewedBy
-//         //schema.user.findOne({ username: app.locals.visiting }, async function (err, data) {
-//             var arrayviewedProfiles;
-//             let viewedProfilesInfoSql = `SELECT * FROM viewedProfileHistory WHERE user_id = '${req.session.user_id}'`;
-//             connection.query(viewedProfilesInfoSql, async (err, result) => {
-//                 if (err) throw err;
-//                 if (result) {
-//                     result.forEach(function (result) {
-//                         app.locals.viewedProfiles = result.username
-//                     })
-//                     arrayviewedProfiles = app.locals.viewedProfiles.split(',')
-//                 }
-//             if (err) throw err;
-//             function findIndex(str) {
-//                 var index = str.indexOf(req.session.user);
-//                 console.log(index);
-//                 return index
-//             }
-//             app.locals.viewedBy = data.viewedBy
-//             var viewedBy = app.locals.viewedBy
-
-//             var viewedCount = findIndex(app.locals.viewedBy);
-//             if (viewedCount == '-1') {
-//                 viewedBy.push(req.session.user);
-//                 console.log('User Profile viewewdBy')
-//                 app.locals.viewedCount = '0'
-//             }
-//             schema.user.findOneAndUpdate({ username: app.locals.visiting },
-//                 {
-//                     $set: {
-//                         viewedBy: viewedBy
-//                     }
-//                 }, async function (err, data) {
-//                     if (err) throw err;
-
-//                 })
-//         })
-//     })
-//     res.off();
-// })
-
+//-------------------------------------------BLOCK a User-----------------------------------------------
 //block a profile
 app.post('/dislike', urlencodedParser, (req, res) => {
     //schema.user.findOne({ username: req.session.user }, async function (err, data) {
@@ -339,5 +210,6 @@ app.post('/dislike', urlencodedParser, (req, res) => {
         });
     })
 })
+//------------------------------------------------__END__---------------------------------------
 
 module.exports = app;

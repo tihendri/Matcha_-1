@@ -84,6 +84,8 @@ app.get('/profile-page', async (req, res) => {
                 result.forEach(function (result) {
                     if(result.username){
                     app.locals.fameRating = ((result.username.split(',').length) - 1)
+                    }else{
+                        app.locals.fameRating = 0
                     }
                 })
             }
@@ -97,9 +99,10 @@ app.get('/profile-page', async (req, res) => {
                     viewedBy = result.username
                 })
                 if(viewedBy){
-
                 viewedBy = viewedBy.substring(1)
                 arrayViewedBy = viewedBy.split(',')
+                }else{
+                    arrayViewedBy = []
                 }
             }
         });
@@ -113,6 +116,8 @@ app.get('/profile-page', async (req, res) => {
                 if(viewedHistory){
                 viewedHistory = viewedHistory.substring(1)
                 arrayViewedHistory = viewedHistory.split(",")
+                }else{
+                    arrayViewedHistory = []
                 }
             }
         });
@@ -126,6 +131,8 @@ app.get('/profile-page', async (req, res) => {
                 if(likeHistory){
                 likeHistory = likeHistory.substring(1)
                 arrayLikeHistory = likeHistory.split(",")
+                }else{
+                    arrayLikeHistory =[];
                 }
             }
         });
