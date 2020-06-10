@@ -120,7 +120,6 @@
         <% break}%>
         <% }%>
         <% if(trueval == '0'){%>
-        <% if((users.city == userCity) && (users.postal == userPostal)){%>
 
         <% if((ageBetween == '18-25') && (users.age >=18 && users.age <=25)){%>
         <% if(users.image){%>
@@ -177,76 +176,7 @@
             style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
             class="button2 form-control"><%= users.username %></button></a>
         <%}%>
-                    <%}%>
 
-        <%}%>
-        <%}%>
-        <% for(users of user){%>
-        <% var trueval = 0%>
-        <% for(block of blocked){%>
-        <% if(block == ','+users.username){%>
-        <% trueval = 1;%>
-        <% break}%>
-        <% }%>
-        <% if(trueval == '0'){%>
-        <% if((users.city != userCity) && (users.postal != userPostal)){%>
-
-        <% if((ageBetween == '18-25') && (users.age >=18 && users.age <=25)){%>
-        <% if(users.image){%>
-        <div style="text-align: center;">
-            <img src="data:image/jpg;base64,<%=users.image%>" width="150" height="150">
-        </div>
-        <%}%>
-        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
-            href="visitProfile?user=<%= users.username%>"><button
-            style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
-            class="button2 form-control"><%= users.username %></button></a>
-        <%}%>
-                    <% if((ageBetween == '26-35') && (users.age >=26 && users.age <=35)){%>
-        <% if(users.image){%>
-        <div style="text-align: center;">
-            <img src="data:image/jpg;base64,<%=users.image%>" width="150" height="150">
-        </div>
-        <%}%>
-        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
-            href="visitProfile?user=<%= users.username%>"><button
-            style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
-            class="button2 form-control"><%= users.username %></button></a>
-        <%}%>
-                    <% if((ageBetween == '36-45') && (users.age >=36 && users.age <=45)){%>
-        <% if(users.image){%>
-        <div style="text-align: center;">
-            <img src="data:image/jpg;base64,<%=users.image%>" width="150" height="150">
-        </div>
-        <%}%>
-        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
-            href="visitProfile?user=<%= users.username%>"><button
-            style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
-            class="button2 form-control"><%= users.username %></button></a>
-        <%}%>
-                    <% if((ageBetween == '46-55') && (users.age >=46 && users.age <=55)){%>
-        <% if(users.image){%>
-        <div style="text-align: center;">
-            <img src="data:image/jpg;base64,<%=users.image%>" width="150" height="150">
-        </div>
-        <%}%>
-        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
-            href="visitProfile?user=<%= users.username%>"><button
-            style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
-            class="button2 form-control"><%= users.username %></button></a>
-        <%}%>
-                    <% if((ageBetween == '56-older') && (users.age >=56)){%>
-        <% if(users.image){%>
-        <div style="text-align: center;">
-            <img src="data:image/jpg;base64,<%=users.image%>" width="150" height="150">
-        </div>
-        <%}%>
-        <a style="margin-top:2em;padding-left: 10em; padding-right: 10em;"
-            href="visitProfile?user=<%= users.username%>"><button
-            style=" background-color: #60b9e2;color:#fff;font-weight: 700;"
-            class="button2 form-control"><%= users.username %></button></a>
-        <%}%>
-                <%}%>
         <%}%>
         <%}%>
         <% }%>
@@ -337,7 +267,7 @@
         <% }%>
         <% }%>
         <% if(trueval == 0){%>
-        <% if((users.city != userCity) && (users.postal != userPostal)){%>
+        <% if((users.city != userCity) || (users.postal != userPostal)){%>
 
         <% if((ageBetween == '18-25') && (users.age >=18 && users.age <=25)){%>
         <% if(users.image){%>

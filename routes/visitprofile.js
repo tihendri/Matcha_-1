@@ -11,7 +11,7 @@ var userLikedBy;
 var userBlocked;
 var userLiked;
 var visitingLiked;
-var userLikesYouCount, count, viewedCount, viewedHistoryCount,blockedCount;
+var userLikesYouCount, count, viewedCount, viewedHistoryCount, blockedCount;
 var vistingViewedBy, viewedBy;
 var connectedTest1, connectedTest2
 var user
@@ -20,9 +20,9 @@ var user
 //View another persons Page
 app.get('/visitProfile', async (req, res) => {
 
-//----------------------------------For logged in user to get Table data-------------------------------------------
+    //----------------------------------For logged in user to get Table data-------------------------------------------
 
-//-----------------------------------Start-------------------------------------------
+    //-----------------------------------Start-------------------------------------------
 
     let likeInfoSql = `SELECT * FROM liked WHERE user_id = '${req.session.user_id}'`;
     connection.query(likeInfoSql, async (err, result) => {
@@ -61,14 +61,16 @@ app.get('/visitProfile', async (req, res) => {
         }
     })
 
-//-------------------------------END OF TABLE SET----------------------------------------
-    
-//-------------------Get visiting user info and set a object with the data-------------------------
-    if(!user){
-         user = req.query.user.toString();
-    }
+    //-------------------------------END OF TABLE SET----------------------------------------
 
-    req.session.visiting = user
+    //-------------------Get visiting user info and set a object with the data-------------------------
+    if (req.query.user) {
+
+        user = req.query.user.toString();
+        req.session.visiting = user
+    } else {
+        user = req.session.visiting
+    }
     let visitinUserInfoSql = `SELECT * FROM users WHERE username = '${user}'`;
     connection.query(visitinUserInfoSql, async (err, result) => {
         if (err) throw err;
@@ -96,15 +98,15 @@ app.get('/visitProfile', async (req, res) => {
             if (err) throw err;
             if (result) {
                 result.forEach(function (result) {
-                    if(result.username){
-                    visitingUserObject.fameRating = ((result.username.split(',').length) -1)
+                    if (result.username) {
+                        visitingUserObject.fameRating = ((result.username.split(',').length) - 1)
                     }
                 })
             }
         });
-//---------------------------------To get Table data for visiting user---------------------
+        //---------------------------------To get Table data for visiting user---------------------
 
-//-----------------------------------------------START----------------------------------------------
+        //-----------------------------------------------START----------------------------------------------
 
         let likeInfoSql = `SELECT * FROM liked WHERE user_id = '${app.locals.visitingUser_id}'`;
         connection.query(likeInfoSql, async (err, result) => {
@@ -124,7 +126,7 @@ app.get('/visitProfile', async (req, res) => {
                 })
             }
         })
-//---------------------------------END OF TABLE SET---------------------------
+        //---------------------------------END OF TABLE SET---------------------------
         //Check if Logged In user has liked the Visiting user
         function findIndexOfUserInLiked(str) {
             var index = str.includes(req.session.visiting);
@@ -149,7 +151,7 @@ app.get('/visitProfile', async (req, res) => {
         }
         if (userBlocked) {
             blockedCount = findIndexOfUserInBlocked(userBlocked);
-            console.log("this is the blockedCount == "+blockedCount)
+            console.log("this is the blockedCount == " + blockedCount)
         } else {
             blockedCount = false
         }
@@ -178,7 +180,7 @@ app.get('/visitProfile', async (req, res) => {
             app.locals.userLikesYouCount = 1;
         }
 
-//--------------------------------ADD logged in user to viewedBy-------------------------- 
+        //--------------------------------ADD logged in user to viewedBy-------------------------- 
 
         function findIndexOfUserInViewedBy(str) {
             var index = str.includes(req.session.user);
@@ -195,15 +197,15 @@ app.get('/visitProfile', async (req, res) => {
             viewedBy = vistingViewedBy + ',' + req.session.user;
             console.log('ADDED logged in user to viewedBy')
         }
-        if(viewedBy){
-        let updateViewedBy = `UPDATE viewedBy SET username = '${viewedBy}' WHERE user_id = '${visitingUserObject.user_id}'`;
-        connection.query(updateViewedBy, async (err, result) => {
-            if (err) throw err;
-        })
-    }
-//---------------------------------------------ADD viewedBy DONE------------------------------------------
+        if (viewedBy) {
+            let updateViewedBy = `UPDATE viewedBy SET username = '${viewedBy}' WHERE user_id = '${visitingUserObject.user_id}'`;
+            connection.query(updateViewedBy, async (err, result) => {
+                if (err) throw err;
+            })
+        }
+        //---------------------------------------------ADD viewedBy DONE------------------------------------------
 
-//---------------------------------------------ADD ViewedHistory------------------------------------------
+        //---------------------------------------------ADD ViewedHistory------------------------------------------
 
         function findIndexOfUserInViewedHistory(str) {
             var index = str.includes(req.session.visiting);
@@ -217,7 +219,7 @@ app.get('/visitProfile', async (req, res) => {
             userViewedHistory = '';
         }
         if (viewedHistoryCount == false) {
-            if(req.session.visiting != "undefined"){
+            if (req.session.visiting != "undefined") {
                 viewedHistory = userViewedHistory + ',' + req.session.visiting;
                 console.log('ADDED user you are visiting to viewedProfileHistory')
             }
@@ -226,9 +228,9 @@ app.get('/visitProfile', async (req, res) => {
         connection.query(updateviewedProfileHistory, async (err, result) => {
             if (err) throw err;
         })
-//---------------------------------------------ADD ViewedHistory DONE------------------------------------------
+        //---------------------------------------------ADD ViewedHistory DONE------------------------------------------
 
-//---------------------------------Check if BOTH users have liked each other--------------------------------------------------
+        //---------------------------------Check if BOTH users have liked each other--------------------------------------------------
         if (userLikedBy) {
             connectedTest1 = userLikedBy.includes(req.session.visiting)
         }
@@ -246,7 +248,7 @@ app.get('/visitProfile', async (req, res) => {
         } else {
             var connected = 0;
         }
-        res.render('visitProfile', { connected: connected, uname: req.session.user, userLikeYou: app.locals.userLikesYouCount, like: app.locals.likeCount, blocked: app.locals.blockedCount , status: visitingUserObject.status, to: req.session.visiting, photo: visitingUserObject.image, name: visitingUserObject.name, surname: visitingUserObject.surname, username: visitingUserObject.username, age: visitingUserObject.age, gender: visitingUserObject.gender, sp: visitingUserObject.sp, bio: visitingUserObject.bio, dislike: visitingUserObject.dislike, sport: visitingUserObject.sport, fitness: visitingUserObject.fitness, technology: visitingUserObject.technology, music: visitingUserObject.music, gaming: visitingUserObject.gaming, fame: visitingUserObject.fameRating });
+        res.render('visitProfile', { connected: connected, uname: req.session.user, userLikeYou: app.locals.userLikesYouCount, like: app.locals.likeCount, blocked: app.locals.blockedCount, status: visitingUserObject.status, to: req.session.visiting, photo: visitingUserObject.image, name: visitingUserObject.name, surname: visitingUserObject.surname, username: visitingUserObject.username, age: visitingUserObject.age, gender: visitingUserObject.gender, sp: visitingUserObject.sp, bio: visitingUserObject.bio, dislike: visitingUserObject.dislike, sport: visitingUserObject.sport, fitness: visitingUserObject.fitness, technology: visitingUserObject.technology, music: visitingUserObject.music, gaming: visitingUserObject.gaming, fame: visitingUserObject.fameRating });
     })
 })
 

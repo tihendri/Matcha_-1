@@ -14,13 +14,22 @@ var likedByCount, count;
 //------------------------------------like a profile----------------------------------------
 app.post('/like', urlencodedParser, async (req, res) => {
     app.locals.visiting = req.session.visiting;
-
+    var userlikedValue;
     let likeInfoSql = `SELECT * FROM liked WHERE user_id = '${req.session.user_id}'`;
     connection.query(likeInfoSql, async (err, result) => {
         if (result != null) {
             result.forEach(function (result) {
                 userLiked = result.username;
                 console.log("userliked == " + userLiked);
+            })
+        }
+    })
+    let userlikedInfoSql = `SELECT liked FROM users WHERE user_id = '${req.session.user_id}'`;
+    connection.query(userlikedInfoSql, async (err, result) => {
+        if (result != null) {
+            result.forEach(function (result) {
+                userlikedValue = result.liked;
+                console.log("liked == " + liked);
             })
         }
     })
@@ -48,17 +57,24 @@ app.post('/like', urlencodedParser, async (req, res) => {
             liked = userLiked + ',' + app.locals.visiting
             app.locals.count = '0'
             console.log('User Profile liked ')
+            userlikedValue++;
         }
         //REMOVE Username from liked string
         else if (count == true) {
             liked = userLiked.replace(',' + app.locals.visiting, '')
             app.locals.count = '-1'
+            userlikedValue--
             console.log(app.locals.likeOrNot)
             console.log('User Profile is unliked')
         }
 
         let updateLiked = `UPDATE liked SET username = '${liked}' WHERE user_id = '${req.session.user_id}'`;
         connection.query(updateLiked, async (err, result) => {
+            if (err) throw err;
+            console.log('User Profile liked or unliked')
+        })
+        let updateUserLiked = `UPDATE users SET liked = '${userlikedValue}' WHERE username = '${app.locals.visiting}'`;
+        connection.query(updateUserLiked, async (err, result) => {
             if (err) throw err;
             console.log('User Profile liked or unliked')
         })
