@@ -85,7 +85,13 @@
       <div style="text-align: center;" class="field"><label class="label" style="color:white;">Gender</label>
           <div style="text-align: center;"class="control">
               <div class="select">
-                <select name="gender" placeholder="<%= gender%>">
+                <select name="gender">
+                  <% if(gender == 'Female'){%>
+                  <option disabled selected >Male</option>
+                    <%}%>
+                    <% if(gender == 'Male'){%>
+                      <option disabled selected >Female</option>
+                        <%}%>
                 <option>Male</option>
                 <option>Female</option>
               </select>
@@ -96,7 +102,8 @@
       <div style="text-align: center;" class="field"><label class="label" style="color:white;">Sexual preference</label>
           <div style="text-align: center;" class="control">
               <div class="select">
-                <select name="sp" placeholder="<%= sp%>">
+                <select name="sp">
+                  <option disabled selected ><%= sp%></option>
                 <option>Heterosexual</option>
                 <option>Homosexual</option>
                 <option>Bisexual</option>
@@ -109,8 +116,8 @@
     <div style="text-align: center;" class="field"><label class="label" style="color:white;">Age</label>
         <div style="text-align: center;" class="control">
             <div class="select">
-                <select name="ageBetween" required>
-                    
+                <select name="ageBetween">
+                  <option disabled selected ><%= ageBetween%></option>
                     <option>18-25</option>
                     <option>26-35</option>
                     <option>36-45</option>
@@ -123,7 +130,8 @@
     <div style="text-align: center;" class="field"><label class="label" style="color:white;">Fame rating</label>
       <div style="text-align: center;" class="control">
           <div class="select">
-              <select name="fameBetween" required>
+              <select name="fameBetween">
+                <option disabled selected >0-17</option>
                   <option>0-17</option>
                   <option>18-25</option>
               </select>
