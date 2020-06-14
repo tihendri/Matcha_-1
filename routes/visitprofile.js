@@ -183,12 +183,11 @@ app.get('/visitProfile', async (req, res) => {
                 }
                 if (vistingViewedBy) {
                     viewedCount = findIndexOfUserInViewedBy(vistingViewedBy);
-                    viewedByLoggedInUserCount = findIndexOfUserInViewedBy(vistingViewedBy);
                 } else {
                     viewedCount = false;
                     vistingViewedBy = '';
                 }
-                if (viewedByLoggedInUserCount == true) {
+                if (viewedCount == true) {
                     viewedBy = vistingViewedBy.replace(',' + req.session.user, '')
                 }
 
@@ -226,14 +225,13 @@ app.get('/visitProfile', async (req, res) => {
 
                 if (userViewedHistory) {
                     viewedHistoryCount = findIndexOfUserInViewedHistory(userViewedHistory);
-                    viewedHistoryLoggedInUserCount = findIndexOfUserInViewedBy(userViewedHistory);
                 } else {
                     viewedHistoryCount = false;
                     userViewedHistory = '';
                 }
-                if (viewedHistoryLoggedInUserCount == true) {
-                    viewedHistory = userViewedHistory.replace(',' + req.session.user, '')
-                }
+                // if (viewedHistoryLoggedInUserCount == true) {
+                //     viewedHistory = userViewedHistory.replace(',' + req.session.user, '')
+                // }
 
 
                 if (viewedHistoryCount == false) {
