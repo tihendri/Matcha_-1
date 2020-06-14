@@ -1,7 +1,6 @@
 var express = require('express');
 var app = express();
 const crypto = require('crypto');
-const schema = require('../models/User');
 const multer = require('multer');
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
@@ -9,6 +8,7 @@ const bodyParser = require('body-parser');
 var config = require('../config.js')
 const connection = config.connection;
 var port = config.port;
+const validate = require("../functions/validation");
 const mailer = require('express-mailer');
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 //render profile page
@@ -24,9 +24,7 @@ mailer.extend(app, {
     }
 })
 app.get('/profile', (req, res) => {
-    if (app.locals.erreg == undefined) {
-        app.locals.erreg = 'You can change your profile info here!';
-    }
+    app.locals.erreg = 'You can change your profile info here!';
     var userObject = {};
     //-----------------------------------------Get Logged In User info-----------------------------------------
     let userInfoSql = `SELECT * FROM users WHERE username = '${req.session.user}'`;
@@ -111,6 +109,7 @@ app.post('/profile', upload.single('photo'), urlencodedParser, (req, res) => {
             username = userObject.username;
         }
         if (req.body.password) {
+
             var password = req.body.password;
             const hash = crypto.createHash("sha256");
             hash.update(password);
@@ -198,62 +197,75 @@ app.post('/profile', upload.single('photo'), urlencodedParser, (req, res) => {
         var sqlCheckIfUserExists = `SELECT username FROM users WHERE username = '${req.body.username}'`;
         connection.query(sqlCheckIfUserExists, (err, result) => {
             if (err) throw err;
-            if ((result.length != 0)&&(userObject.username != req.body.username)){
+            
+                if ((result.length != 0) && (userObject.username != req.body.username)) {
                     console.log(req.body.email);
                     console.log("Username Exists!");
                     app.locals.erreg = 'Username Exists!';
                     res.render('profile', { erreg: app.locals.erreg, name: userObject.name, surname: userObject.surname, username: userObject.username, password: "******", email: userObject.email, age: userObject.age, gender: userObject.gender, sp: userObject.sp, bio: userObject.bio, fameRating: userObject.fameRating, sport: userObject.sport, fitness: userObject.fitness, technology: userObject.technology, music: userObject.music, gaming: userObject.gaming });
-            } else {
-                var sqlCheckIfEmailExists = `SELECT email FROM users WHERE email = '${req.body.email}'`;
-                //checks if user exists and insert user data into db
-                app.locals.erreg = null;
+                } else {
+                    var sqlCheckIfEmailExists = `SELECT email FROM users WHERE email = '${req.body.email}'`;
+                    //checks if user exists and insert user data into db
+                    app.locals.erreg = null;
 
-                connection.query(sqlCheckIfEmailExists, (err, result) => {
-                    if (err) throw err;
-                    if ((result.length != 0) && (userObject.email != req.body.email)) {
+                    connection.query(sqlCheckIfEmailExists, (err, result) => {
+                        if (err) throw err;
+                        if ((result.length != 0) && (userObject.email != req.body.email)) {
                             console.log(req.body.email);
                             console.log("Email Exists!");
                             app.locals.erreg = 'Email Exists!';
                             res.render('profile', { erreg: app.locals.erreg, name: userObject.name, surname: userObject.surname, username: userObject.username, password: "******", email: userObject.email, age: userObject.age, gender: userObject.gender, sp: userObject.sp, bio: userObject.bio, fameRating: userObject.fameRating, sport: userObject.sport, fitness: userObject.fitness, technology: userObject.technology, music: userObject.music, gaming: userObject.gaming });
-                    } else {
-                        let updateUserProfile = `UPDATE users SET name = '${name}',surname = '${surname}',username = '${username}',password = '${pass}',email = '${email}',age = '${age}',gender = '${gender}',sp = '${sp}',image = '${image}',bio = '${bio}',ageBetween = '${ageBetween}',sport = '${sport}',fitness = '${fitness}',technology = '${technology}',music = '${music}',gaming = '${gaming}' WHERE user_id = '${req.session.user_id}'`;
-                        connection.query(updateUserProfile, async (err, result) => {
-                            if (err) throw err;
-                            req.session.user = username;
-                            if ((email != userObject.email) && (req.body.email != null)) {
-                                var key = req.session.user + Date.now();
-                                const hashkey = crypto.createHash("sha256");
-                                hashkey.update(key);
-                                vkey = hashkey.digest("hex");
-                                let updateEmail = `UPDATE users SET verified = false , vkey = '${vkey}' WHERE username = '${req.session.user}'`;
-                                connection.query(updateEmail, async (err, result) => {
-                                    if (err) throw err;
-                                    app.mailer.send('email', {
-                                        to: app.locals.changedEmail,
-                                        subject: 'Matcha Registration',
-                                        vkey: vkey,
-                                        port: port
-                                    }, function (err) {
-                                        if (err) {
-                                            console.log(err);
-                                            return;
-                                        }
-                                        console.log('Registration email sent to ' + req.session.user);
+                        } else {
+                            if (req.body.password && (validate.checkPassword(req.body.password) == false)) {
+
+                               
+                                    console.log("Password Invalid!");
+                                    app.locals.erreg = 'Password must contain a Capital letter ,Lowercase letter, a number and be longer than 5 characters !';
+                                    res.render('profile', { erreg: app.locals.erreg, name: userObject.name, surname: userObject.surname, username: userObject.username, password: "******", email: userObject.email, age: userObject.age, gender: userObject.gender, sp: userObject.sp, bio: userObject.bio, fameRating: userObject.fameRating, sport: userObject.sport, fitness: userObject.fitness, technology: userObject.technology, music: userObject.music, gaming: userObject.gaming });
+                                
+                            } else{
+
+                            let updateUserProfile = `UPDATE users SET name = '${name}',surname = '${surname}',username = '${username}',password = '${pass}',email = '${email}',age = '${age}',gender = '${gender}',sp = '${sp}',image = '${image}',bio = '${bio}',ageBetween = '${ageBetween}',sport = '${sport}',fitness = '${fitness}',technology = '${technology}',music = '${music}',gaming = '${gaming}' WHERE user_id = '${req.session.user_id}'`;
+                            connection.query(updateUserProfile, async (err, result) => {
+                                if (err) throw err;
+                                req.session.user = username;
+                                if ((email != userObject.email) && (req.body.email != null)) {
+                                    var key = req.session.user + Date.now();
+                                    const hashkey = crypto.createHash("sha256");
+                                    hashkey.update(key);
+                                    vkey = hashkey.digest("hex");
+                                    let updateEmail = `UPDATE users SET verified = false , vkey = '${vkey}' WHERE username = '${req.session.user}'`;
+                                    connection.query(updateEmail, async (err, result) => {
+                                        if (err) throw err;
+                                        app.mailer.send('email', {
+                                            to: app.locals.changedEmail,
+                                            subject: 'Matcha Registration',
+                                            vkey: vkey,
+                                            port: port
+                                        }, function (err) {
+                                            if (err) {
+                                                console.log(err);
+                                                return;
+                                            }
+                                            console.log('Registration email sent to ' + req.session.user);
+                                        })
+                                        res.redirect('/logout');
+
                                     })
-                                    res.redirect('/logout');
+                                } else {
+                                    console.log('User Profile Updated')
+                                    res.redirect('/profile-page');
+                                }
 
-                                })
-                            } else {
-                                console.log('User Profile Updated')
-                                res.redirect('/profile-page');
-                            }
+                            })
+                        }
+                        }
+                    })
+                }
 
-                        })
-                    }
-                })
-            }
         })
     })
 })
+
 
 module.exports = app;

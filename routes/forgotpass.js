@@ -7,6 +7,7 @@ const mailer = require('express-mailer');
 var config = require('../config.js')
 const connection = config.connection;
 var port = config.port;
+const validate = require("../functions/validation");
 
 mailer.extend(app, {
     from: 'matchaprojectsup@gmail.com',
@@ -44,7 +45,6 @@ app.post('/forgotpass', urlencodedParser, (req, res) => {
                 return;
             }
             console.log('Email sent to change password');
-            if (app.locals.erreg == undefined)
                 app.locals.erreg = 'Please check your email!';
             res.redirect('/');
         })
@@ -52,23 +52,31 @@ app.post('/forgotpass', urlencodedParser, (req, res) => {
 });
 
 app.get('/changepass', urlencodedParser, (req, res) => {
+    app.locals.erreg = "Please Enter Your New Password!"
     const key = req.query.vkey.toString();
-    console.log(key);
-    res.render('change-pass', { vkey: key });
+    res.render('change-pass', { vkey: key, erreg: app.locals.erreg });
 });
 
 app.post('/changepass', urlencodedParser, (req, res) => {
+
     var key = req.body.vkey;
-    console.log(key)
     var pass = req.body.new_password;
-    const hashkey = crypto.createHash("sha256");
-    hashkey.update(pass);
-    let updatePassword = `UPDATE users SET password = '${hashkey.digest("hex")}' WHERE vkey = '${key}'`;
-    connection.query(updatePassword, async (err, result) => {
-        if (err) throw err;
-        console.log("password has been updated!");
-        res.redirect('/');
-    });
+    if (validate.checkPassword(req.body.new_password )== true) {
+        const hashkey = crypto.createHash("sha256");
+        hashkey.update(pass);
+        let updatePassword = `UPDATE users SET password = '${hashkey.digest("hex")}' WHERE vkey = '${key}'`;
+        connection.query(updatePassword, async (err, result) => {
+            if (err) throw err;
+            console.log("password has been updated!");
+            app.locals.erreg = "Password has been updated!"
+            res.redirect('/');
+        });
+
+    } else {
+        console.log('Password invalid');
+        app.locals.erreg = 'Password must contain a Capital letter ,Lowercase letter, a number and be longer than 5 characters !'
+        res.render('change-pass', { vkey: key, erreg: app.locals.erreg });
+    }
 })
 
 module.exports = app;

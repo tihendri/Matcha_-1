@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-const schema = require('../models/User');
 const bodyParser = require('body-parser');
 var config = require('../config.js')
 const connection = config.connection;

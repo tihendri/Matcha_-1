@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-const schema = require('../models/User');
 const getIP = require('external-ip')();
 const iplocation = require("iplocation").default
 var config = require('../config.js')
@@ -16,7 +15,6 @@ app.get('/home', (req, res) => {
         var geo = iplocation(ip, [], function (err, res) {
             //add new user to db
             if (err) throw err;
-
             if (res.city) {
                 city = res.city;
             }
@@ -34,7 +32,7 @@ app.get('/home', (req, res) => {
         })
     })
     //WEIRD if you don't call this the session user does not update????
-    console.log("Sesion user == " + req.session.user)
+    console.log("Session user == " + req.session.user)
     //-----------------------------------------------------------------
     let userInfoSql = `SELECT * FROM users WHERE username = '${req.session.user}'`;
     connection.query(userInfoSql, async (err, result) => {
@@ -105,26 +103,20 @@ app.get('/home', (req, res) => {
                 result.forEach(function (result) {
                     usersArray.push(result);
                 })
-
                 if (err) throw err;
-
                 res.render('home', { user: usersArray, username: req.session.user, locationTest: '0', name: req.session.user, blocked: blockedUsers, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween: app.locals.userAge, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
-
             })
         }
         else {
             let userInfoSql = `SELECT * FROM users WHERE sp = '${userObject.sp}' AND sport= '${userObject.sport}' AND fitness='${userObject.fitness}' AND technology = '${userObject.technology}' AND music = '${userObject.music}' AND gaming = '${userObject.gaming}' '`;
-
             connection.query(userInfoSql, async (err, result) => {
                 if (err) throw err;
                 var usersArray = [];
-
                 result.forEach(function (result) {
                     usersArray.push(result);
 
                 })
                 res.render('home', { locationTest: '0', user: usersArray, name: req.session.user, blocked: blockedUsers, userLength: app.locals.userLength, ageIsValid: app.locals.age, ageBetween: app.locals.userAge, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
-
             })
         }
     }

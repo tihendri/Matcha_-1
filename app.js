@@ -89,7 +89,7 @@ app.get('/createDatabase', (req, res) => {
 })
 //create User Table
 app.get('/createTable', (req, res) => {
-    let sql = "CREATE TABLE users(user_id INT AUTO_INCREMENT,name VARCHAR(100), surname VARCHAR(100),username VARCHAR(100),email VARCHAR(100), password VARCHAR(100),age INT, gender VARCHAR(100), sp VARCHAR(100), bio VARCHAR(100), verified BOOLEAN DEFAULT false,status VARCHAR(100) DEFAULT 'offline' ,image LONGTEXT, vkey LONGTEXT, sport VARCHAR(10) DEFAULT 'off',fitness VARCHAR(10) DEFAULT 'off',technology VARCHAR(10) DEFAULT 'off', music VARCHAR(10) DEFAULT 'off', gaming VARCHAR(10) DEFAULT 'off', ageBetween VARCHAR(20), city VARCHAR(200), country VARCHAR(200), postal VARCHAR(200),PRIMARY KEY (user_id))";
+    let sql = "CREATE TABLE users(user_id INT AUTO_INCREMENT,name VARCHAR(100), surname VARCHAR(100),username VARCHAR(100),email VARCHAR(100),liked INT DEFAULT 0, password VARCHAR(100),age INT, gender VARCHAR(100), sp VARCHAR(100), bio VARCHAR(100), verified BOOLEAN DEFAULT false,status VARCHAR(100) DEFAULT 'offline' ,image LONGTEXT, vkey LONGTEXT, sport VARCHAR(10) DEFAULT 'off',fitness VARCHAR(10) DEFAULT 'off',technology VARCHAR(10) DEFAULT 'off', music VARCHAR(10) DEFAULT 'off', gaming VARCHAR(10) DEFAULT 'off', ageBetween VARCHAR(20), city VARCHAR(200), country VARCHAR(200), postal VARCHAR(200),PRIMARY KEY (user_id))";
     connection.query(sql, (err, result) => {
         if (err) throw err;
         console.log("Users Table created...");

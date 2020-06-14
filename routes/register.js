@@ -1,7 +1,6 @@
 var express = require('express');
 var app = express();
 const crypto = require('crypto');
-const schema = require('../models/User');
 const bodyParser = require('body-parser');
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const validate = require("../functions/validation");
@@ -39,85 +38,85 @@ app.get('/register', (req, res) => {
 //Adding User to DB!
 app.post('/register', upload.single('photo'), urlencodedParser, async function (req, res) {
     //validate password
-    //  if (validate.checkPassword(req.body.password)) {
-    //hash password and vkey
-    username = req.body.username.charAt(0).toUpperCase() + req.body.username.substring(1);
-    var password = req.body.password;
-    var key = req.body.username + Date.now();
-    const hashpw = crypto.createHash("sha256");
-    const hashkey = crypto.createHash("sha256");
-    hashpw.update(password);
-    hashkey.update(key);
-    password = hashpw.digest("hex"),
-        vkey = hashkey.digest("hex");
+    if (validate.checkPassword(req.body.password) == true) {
+        //hash password and vkey
+        username = req.body.username.charAt(0).toUpperCase() + req.body.username.substring(1).toLowerCase();
+        var password = req.body.password;
+        var key = req.body.username + Date.now();
+        const hashpw = crypto.createHash("sha256");
+        const hashkey = crypto.createHash("sha256");
+        hashpw.update(password);
+        hashkey.update(key);
+        password = hashpw.digest("hex"),
+            vkey = hashkey.digest("hex");
+        if (req.body.age >= 18) {
+            var sqlCheckIfUserExists = `SELECT username FROM users WHERE username = '${req.body.username}'`;
+            connection.query(sqlCheckIfUserExists, (err, result) => {
+                if (err) throw err;
+                if (result.length != 0) {
+                    console.log(req.body.email);
+                    console.log("Username Exists!");
+                    app.locals.erreg = 'Username Exists!';
+                    res.render('register', { erreg: app.locals.erreg })
+                } else {
+                    var sqlCheckIfEmailExists = `SELECT email FROM users WHERE email = '${req.body.email}'`;
+                    //checks if user exists and insert user data into db
+                    app.locals.erreg = null;
 
+                    connection.query(sqlCheckIfEmailExists, (err, result) => {
+                        if (err) throw err;
+                        if (result.length != 0) {
+                            console.log(req.body.email);
+                            console.log("Email Exists!");
+                            app.locals.erreg = 'Email Exists!';
+                            res.render('register', { erreg: app.locals.erreg })
+                            // res.redirect('/');
 
-    if (req.body.age >= 18) {
-        var sqlCheckIfUserExists = `SELECT username FROM users WHERE username = '${req.body.username}'`;
-        connection.query(sqlCheckIfUserExists, (err, result) => {
-            if (err) throw err;
-            if (result.length != 0) {
-                console.log(req.body.email);
-                console.log("Username Exists!");
-                app.locals.erreg = 'Username Exists!';
-                res.render('register', { erreg: app.locals.erreg })
-            } else {
-                var sqlCheckIfEmailExists = `SELECT email FROM users WHERE email = '${req.body.email}'`;
-                //checks if user exists and insert user data into db
-                app.locals.erreg = null;
+                        } else {
+                            app.locals.erreg = null;
+                            image = req.file.buffer.toString('base64'),
+                                name = req.body.name,
+                                surname = req.body.surname,
+                                username = username,
+                                hexPassword = password,
+                                email = req.body.email,
+                                age = req.body.age,
+                                gender = req.body.gender,
+                                sp = req.body.sp,
+                                bio = req.body.bio,
+                                sport = (req.body.sport == "on") ? "on" : "off",
+                                fitness = (req.body.fitness == "on") ? "on" : "off",
+                                technology = (req.body.technology == "on") ? "on" : "off",
+                                music = (req.body.music == "on") ? "on" : "off",
+                                gaming = (req.body.gaming == "on") ? "on" : "off",
+                                ageBetween = req.body.ageBetween,
+                                vkey = vkey,
+                                city = app.locals.city,
+                                country = app.locals.country,
+                                postal = app.locals.postal
 
-                connection.query(sqlCheckIfEmailExists, (err, result) => {
-                    if (err) throw err;
-                    if (result.length != 0) {
-                        console.log(req.body.email);
-                        console.log("Email Exists!");
-                        app.locals.erreg = 'Email Exists!';
-                        res.render('register', { erreg: app.locals.erreg })
-                        // res.redirect('/');
-
-                    } else {
-                     
-
-                        app.locals.erreg = null;
-                        image = req.file.buffer.toString('base64'),
-                            name = req.body.name,
-                            surname = req.body.surname,
-                            username = username,
-                            hexPassword = password,
-                            email = req.body.email,
-                            age = req.body.age,
-                            gender = req.body.gender,
-                            sp = req.body.sp,
-                            bio = req.body.bio,
-                            sport = (req.body.sport == "on") ? "on" : "off",
-                            fitness = (req.body.fitness == "on") ? "on" : "off",
-                            technology = (req.body.technology == "on") ? "on" : "off",
-                            music = (req.body.music == "on") ? "on" : "off",
-                            gaming = (req.body.gaming == "on") ? "on" : "off",
-                            ageBetween = req.body.ageBetween,
-                            vkey = vkey,
-                            city = app.locals.city,
-                            country = app.locals.country,
-                            postal = app.locals.postal
-
-                        console.log("Postal code = " + app.locals.postal)
-                        res.redirect('/UserAdded');
-                    }
-                })
+                            console.log("Postal code = " + app.locals.postal)
+                            res.redirect('/UserAdded');
+                        }
+                    })
+                }
+                app.locals.erreg = undefined;
             }
-            app.locals.erreg = undefined;
+            )
         }
-        )
-    }
-    else {
+        else {
+            console.log('User needs to be 18 or older');
+            app.locals.erreg = 'User must be 18 or older to register!';
+            res.redirect('/register');
+        }
+    } else {
         console.log('User needs to be 18 or older');
-        app.locals.erreg = 'User must be 18 or older to register!';
+        app.locals.erreg = 'Password must contain a Capital letter ,Lowercase letter, a number and be longer than 5 characters !';
         res.redirect('/register');
     }
 })
 
-
-app.get('/UserAdded',async (req, res) => {
+app.get('/UserAdded', async (req, res) => {
     let post = { image: image, name: name, surname: surname, username: username, password: hexPassword, email: email, age: age, gender: gender, sp: sp, bio: bio, sport: sport, fitness: fitness, technology: technology, music: music, gaming: gaming, ageBetween: ageBetween, vkey: vkey, city: city, country: country, postal: postal };
     let sql = 'INSERT INTO users SET ?';
 
@@ -173,9 +172,6 @@ app.get('/UserAdded',async (req, res) => {
                 })
             }
         })
-     
-    
-       
         //send verification email to user
         res.redirect('/');
         app.mailer.send('email', {
@@ -210,7 +206,7 @@ app.get('/UserAdded',async (req, res) => {
             console.log("Postal code = " + app.locals.postal)
             let updateLocationSQL = `UPDATE users SET city = '${app.locals.city}',country ='${app.locals.country}',postal ='${app.locals.postal}' WHERE username ='${username}'`
             connection.query(updateLocationSQL, (err, result) => {
-              
+
                 if (err) throw err;
                 console.log('Updated location...')
             })
@@ -223,9 +219,7 @@ app.get('/UserAdded',async (req, res) => {
 app.get('/verify', urlencodedParser, (req, res) => {
     var key = req.query.vkey.toString();
     console.log(key);
-    // check why error with { $ne: [vkey, 'null'] },                            <--------!!!!!!!
     let verifySql = `UPDATE users SET verified = true WHERE vkey = ?`;
-
     connection.query(verifySql, key, (err, result) => {
         if (err) throw err;
         if (result.verified == 1) {

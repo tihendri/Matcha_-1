@@ -6,7 +6,6 @@ const connection = config.connection;
 
 app.get('/logout', (req, res) => {
     //last seen
-    var offline = "offline"
     D = new Date();
     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var day = JSON.stringify(D.getDate());

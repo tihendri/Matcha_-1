@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-const schema = require('../models/User');
+// const schema = require('../models/User');
 const bodyParser = require('body-parser');
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const multer = require('multer');

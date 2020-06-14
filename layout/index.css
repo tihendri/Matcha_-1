@@ -1,6 +1,7 @@
 
 
 html,body{
+height:100%;
 background: linear-gradient(#FD4D52, #892B8B);
 padding: 20px;
 color: white;
