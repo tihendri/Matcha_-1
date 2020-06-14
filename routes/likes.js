@@ -29,8 +29,10 @@ app.post('/like', urlencodedParser, async (req, res) => {
         if (result != null) {
             result.forEach(function (result) {
                 userLiked = result.username;
+                if(result.username){
                 userlikedValue = ((result.username.split(',').length) - 1)
                 console.log("userliked == " + userLiked);
+                }
             })
      
     // let userlikedInfoSql = `SELECT liked FROM users WHERE user_id = '${req.session.user_id}'`;
