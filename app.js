@@ -144,28 +144,28 @@ function saveMsg(data) {
 ////////////////////////////UNCOMMENT THIS !!!///////////////////////
 //-----------------------JUST A LAS WITH ALL THE EMAILS--------------------------
 function notif_mail(from, to, notif) {
-    // var userEmail;
-    // let userInfoSql = `SELECT * FROM users WHERE username = '${to}'`;
-    // connection.query(userInfoSql, async (err, result) => {
-    //     if (err) throw err;
-    //     if (result) {
-    //         result.forEach(function (result) {
-    //             userEmail = result.email
-    //         })
-    //         app.mailer.send('notif', {
-    //             to: userEmail,
-    //             subject: 'Matcha - Notification from ' + from,
-    //             from: from,
-    //             notif: notif
-    //         }, function (err) {
-    //             if (err) {
-    //                 console.log(err);
-    //                 return;
-    //             }
-    //             console.log('Notification email sent to ' + to);
-    //         })
-    //     }
-    // })
+    var userEmail;
+    let userInfoSql = `SELECT * FROM users WHERE username = '${to}'`;
+    connection.query(userInfoSql, async (err, result) => {
+        if (err) throw err;
+        if (result) {
+            result.forEach(function (result) {
+                userEmail = result.email
+            })
+            app.mailer.send('notif', {
+                to: userEmail,
+                subject: 'Matcha - Notification from ' + from,
+                from: from,
+                notif: notif
+            }, function (err) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log('Notification email sent to ' + to);
+            })
+        }
+    })
 }
 //------------------------------------------UNCOMMENT TOP----------------
 

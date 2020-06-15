@@ -110,7 +110,7 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
             res.redirect('/register');
         }
     } else {
-        console.log('User needs to be 18 or older');
+        console.log('Password invalid');
         app.locals.erreg = 'Password must contain a Capital letter ,Lowercase letter, a number and be longer than 5 characters !';
         res.redirect('/register');
     }

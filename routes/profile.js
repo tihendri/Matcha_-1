@@ -224,6 +224,12 @@ app.post('/profile', upload.single('photo'), urlencodedParser, (req, res) => {
                                     res.render('profile', { erreg: app.locals.erreg, name: userObject.name, surname: userObject.surname, username: userObject.username, password: "******", email: userObject.email, age: userObject.age, gender: userObject.gender, sp: userObject.sp, bio: userObject.bio, fameRating: userObject.fameRating, sport: userObject.sport, fitness: userObject.fitness, technology: userObject.technology, music: userObject.music, gaming: userObject.gaming });
                                 
                             } else{
+                                if ( (req.body.age < 18) && (req.body.age.length > 0)) {
+                                    console.log("AGE Invalid!");
+                                    app.locals.erreg = 'You must be 18 or older to use this website!';
+                                    res.render('profile', { erreg: app.locals.erreg, name: userObject.name, surname: userObject.surname, username: userObject.username, password: "******", email: userObject.email, age: userObject.age, gender: userObject.gender, sp: userObject.sp, bio: userObject.bio, fameRating: userObject.fameRating, sport: userObject.sport, fitness: userObject.fitness, technology: userObject.technology, music: userObject.music, gaming: userObject.gaming });
+                                
+                                }else{
 
                             let updateUserProfile = `UPDATE users SET name = '${name}',surname = '${surname}',username = '${username}',password = '${pass}',email = '${email}',age = '${age}',gender = '${gender}',sp = '${sp}',image = '${image}',bio = '${bio}',ageBetween = '${ageBetween}',sport = '${sport}',fitness = '${fitness}',technology = '${technology}',music = '${music}',gaming = '${gaming}' WHERE user_id = '${req.session.user_id}'`;
                             connection.query(updateUserProfile, async (err, result) => {
@@ -259,6 +265,7 @@ app.post('/profile', upload.single('photo'), urlencodedParser, (req, res) => {
 
                             })
                         }
+                    }
                         }
                     })
                 }

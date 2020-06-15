@@ -9,6 +9,9 @@ var userObject = {};
 
 //Get all users for matching
 app.get('/home', (req, res) => {
+    if(req.session.user == undefined){
+        res.redirect('/')
+    }
     //Update IP
     getIP(function (err, ip) {
         if (err) throw err;

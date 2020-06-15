@@ -17,6 +17,9 @@ var user
 
 //View another persons Page
 app.get('/visitProfile', async (req, res) => {
+    if(req.session.user == undefined){
+        res.redirect('/')
+    }
     console.log("Session user == " + req.session.user)
 
     //----------------------------------For logged in user to get Table data-------------------------------------------
@@ -82,19 +85,21 @@ app.get('/visitProfile', async (req, res) => {
             visitingUserObject.gender = result.gender;
             visitingUserObject.bio = result.bio;
             visitingUserObject.image = result.image;
+            visitingUserObject.fameRating = result.liked;
             req.session.visiting = result.username
+
         })
-        let likedByInfoSql = `SELECT * FROM likedBy WHERE user_id = '${app.locals.visitingUser_id}'`;
-        connection.query(likedByInfoSql, async (err, result) => {
-            if (err) throw err;
-            if (result) {
-                result.forEach(function (result) {
-                    if (result.username) {
-                        visitingUserObject.fameRating = ((result.username.split(',').length) - 1)
-                    }
-                })
-            }
-        });
+        // let likedByInfoSql = `SELECT * FROM likedBy WHERE user_id = '${app.locals.visitingUser_id}'`;
+        // connection.query(likedByInfoSql, async (err, result) => {
+        //     if (err) throw err;
+        //     if (result) {
+        //         result.forEach(function (result) {
+        //             if (result.username) {
+        //                 visitingUserObject.fameRating = ((result.username.split(',').length) - 1)
+        //             }
+        //         })
+        //     }
+        // });
         //---------------------------------To get Table data for visiting user---------------------
 
         //-----------------------------------------------START----------------------------------------------

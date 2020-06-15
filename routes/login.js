@@ -10,7 +10,7 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 var loginUsername;
 var loginPassword
 app.get('/', (req, res) => {
-   
+   if(app.locals.errlog == undefined)
         app.locals.errlog = 'Please fill in the form to login!';
     res.render('login', { err: app.locals.errlog });
 });

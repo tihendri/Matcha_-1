@@ -34,6 +34,9 @@ app.get('/image-upload', (req, res) => {
 
 //------------------------------------------LOAD USER PROFILE--------------------------------
 app.get('/profile-page', async (req, res) => {
+    if(req.session.user == undefined){
+        res.redirect('/')
+    }
     app.locals.erreg = 'You can change your profile info here!';
     
     let userInfoSql = `SELECT * FROM users WHERE username = '${req.session.user}'`;
