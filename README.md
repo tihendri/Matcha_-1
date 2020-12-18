@@ -25,7 +25,7 @@ Matcha is a website that allows users to find each other using geolocation and c
 
 5. Start the projects NodeJs server by navigating to the projects folder in the terminal and typing npm start.
 
-6. Now that the server is running we need to create the database create the database by running http://localhost:8014/createDatabase in your browsers search bar.
+6. Create the database by running http://localhost:8014/createDatabase in your browsers search bar.
 
 7. To create the database tables run http://localhost:8014/createTable in your browsers search bar.
 
