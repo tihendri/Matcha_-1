@@ -1,5 +1,5 @@
 # Matcha
-Matcha is a website that allows users to find each other using geolocation and common interests. These users can then talk to each other and meet up if they want to. Users can look at each others profiles and see what the user like etc. It is a lot like Tinder.
+Matcha is a website that allows users to find each other using geolocation and common interests. These users can then talk to each other and meet up if they want to. Users can view each others profiles and see what the user like etc. It is a lot like Tinder.
 # Requirements
 * HTML
 * CSS
