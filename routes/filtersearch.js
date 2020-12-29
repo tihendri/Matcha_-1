@@ -27,14 +27,12 @@ app.get('/filteredSearch', (req, res) => {
         }
         // schema.user.findOne({ username: req.session.user }, async function (err, data) {
         //     if (err) throw err;
-        res.render('filteredSearch', { name: req.session.user, gender: userObject.gender, sp: userObject.sp ,ageBetween: userObject.ageBetween});
+        res.render('filteredSearch', { name: req.session.user, gender: userObject.gender, sp: userObject.sp, ageBetween: userObject.ageBetween });
     });
 });
 
 //Advanced Search
 app.post('/filterSearch', urlencodedParser, (req, res) => {
-    // app.locals.filterSearch = req.body
-    // schema.user.findOne({ username: req.session.user }, function (err, data) {
     var userObject = {}
     let userInfoSql = `SELECT * FROM users WHERE username = '${req.session.user}'`;
     connection.query(userInfoSql, async (err, result) => {
@@ -54,14 +52,12 @@ app.post('/filterSearch', urlencodedParser, (req, res) => {
 
             })
 
-            //     if (data) {
             if (err) throw err;
-            // app.locals.filterSearch = data
             if (req.body.gender == null) {
-                if(userObject.gender == 'Female'){
+                if (userObject.gender == 'Female') {
                     req.body.gender = 'Male'
 
-                }else{
+                } else {
                     req.body.gender = 'Female'
 
                 }
@@ -97,66 +93,50 @@ app.post('/filterSearch', urlencodedParser, (req, res) => {
             else {
                 app.locals.sameLocation = '1'
             }
-            console.log("gender = "+req.body.gender)
-            console.log("sp = "+req.body.sp)
-            console.log("agebetween = "+req.body.ageBetween)
-            console.log(" gaming = "+req.body.gaming)
-            console.log("fitness = "+req.body.fitness)
-            console.log("technology = "+req.body.technology)
-            console.log("music = "+req.body.music)
-            console.log("sameLocation = "+app.locals.sameLocation)
+            console.log("gender = " + req.body.gender)
+            console.log("sp = " + req.body.sp)
+            console.log("agebetween = " + req.body.ageBetween)
+            console.log(" gaming = " + req.body.gaming)
+            console.log("fitness = " + req.body.fitness)
+            console.log("technology = " + req.body.technology)
+            console.log("music = " + req.body.music)
+            console.log("sameLocation = " + app.locals.sameLocation)
 
             let likedByInfoSql = `SELECT username FROM likedBy WHERE user_id != '${req.session.user_id}'`;
             connection.query(likedByInfoSql, async (err, result) => {
                 if (err) throw err;
                 if (result) {
                     result.forEach(function (result) {
-                        if(result.username){
-                        app.locals.fameRating = ((result.username.split(',').length) - 1)
-                        }else{
+                        if (result.username) {
+                            app.locals.fameRating = ((result.username.split(',').length) - 1)
+                        } else {
                             app.locals.fameRating = 0
                         }
                     })
                 }
-            
-            var searchedUserObject = []
-            let searchInfoSql = `SELECT * FROM users WHERE sp ='${req.body.sp}'AND gender = '${req.body.gender}' AND sport = '${req.body.sport}' AND fitness='${req.body.fitness}' AND technology ='${req.body.technology}' AND music = '${req.body.music}' AND gaming = '${req.body.gaming}' AND username != '${req.session.user}'`;
-            connection.query(searchInfoSql, async (err, result) => {
-                if (err) throw err;
-                if (result) {
-                    result.forEach(element => {
-                        searchedUserObject.push(element)
-                    });
-                    console.log("full object")
-                   
-                    res.render('filterResults', { user: searchedUserObject, name:req.session.user,sameLocation: app.locals.sameLocation, userCity: userObject.city, userPostal: userObject.postal, ageBetween: req.body.ageBetween ,fameBetween:req.body.fameBetween, fameRating: app.locals.fameRating})
-                }else{
-                    console.log("Emty object")
-                    res.render('filterResults', { user: searchedUserObject, name:req.session.user, sameLocation: app.locals.sameLocation, userCity: userObject.city, userPostal: userObject.postal, ageBetween: req.body.ageBetween, fameBetween:req.body.fameBetween, fameRating: app.locals.fameRating})
+
+                var searchedUserObject = []
+                let searchInfoSql = `SELECT * FROM users WHERE sp ='${req.body.sp}'AND gender = '${req.body.gender}' AND sport = '${req.body.sport}' AND fitness='${req.body.fitness}' AND technology ='${req.body.technology}' AND music = '${req.body.music}' AND gaming = '${req.body.gaming}' AND username != '${req.session.user}'`;
+                connection.query(searchInfoSql, async (err, result) => {
+                    if (err) throw err;
+                    if (result) {
+                        result.forEach(element => {
+                            searchedUserObject.push(element)
+                        });
+                        console.log("full object")
+
+                        res.render('filterResults', { user: searchedUserObject, name: req.session.user, sameLocation: app.locals.sameLocation, userCity: userObject.city, userPostal: userObject.postal, ageBetween: req.body.ageBetween, fameBetween: req.body.fameBetween, fameRating: app.locals.fameRating })
+                    } else {
+                        console.log("Emty object")
+                        res.render('filterResults', { user: searchedUserObject, name: req.session.user, sameLocation: app.locals.sameLocation, userCity: userObject.city, userPostal: userObject.postal, ageBetween: req.body.ageBetween, fameBetween: req.body.fameBetween, fameRating: app.locals.fameRating })
+                    }
+
                 }
-               
 
-                // result.forEach(function (result) {
-                // schema.user.find({
-                //     sp: req.body.sp,
-                //     gender: req.body.gender,
-                //     sport: req.body.sport,
-                //     fitness: req.body.fitness,
-                //     technology: req.body.technology,
-                //     music: req.body.music,
-                //     gaming: req.body.gaming,
-                //     username: { $ne: req.session.user }
-                // }, function (err, data) {
-                // res.render('filterResults', { fameBetween: req.body.fameBetween, name: req.session.user, userPostal: app.locals.userPostal, sameLocation: app.locals.sameLocation, user: data, ageBetween: req.body.ageBetween, userCounty: app.locals.userCountry, userCity: app.locals.userCity, userPostal: app.locals.userPostal });
-            }
-                // })
-                // }
-
-            )
-        });
+                )
+            });
         }
     })
 })
-// });
 
 module.exports = app;

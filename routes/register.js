@@ -70,7 +70,6 @@ app.post('/register', upload.single('photo'), urlencodedParser, async function (
                             console.log("Email Exists!");
                             app.locals.erreg = 'Email Exists!';
                             res.render('register', { erreg: app.locals.erreg })
-                            // res.redirect('/');
 
                         } else {
                             app.locals.erreg = null;
