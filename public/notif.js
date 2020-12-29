@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:8014');
+var socket = io.connect('http://localhost:8010');
 var notif = document.getElementById('notif'),
     uname = document.getElementById('uname')
     likeBtn = document.getElementById('likeBtn'),
@@ -32,29 +32,7 @@ var notif = document.getElementById('notif'),
                 to: to.value,
             })
         })}
-        // if (viewedBtn){
-        //     viewedBtn.addEventListener('click',function(){
-        //         socket.emit('viewed',{
-        //             from: from.value,
-        //             to: to.value,
-        //         })
-        //     })}
-  
 
-        // if (viewedBtn){
-        //     viewedBtn.addEventListener('click',function(){
-        //         var viewed = document.getElementById('view');
-        //         document.getElementById("view").value = viewed;
-        //         console.log('to '+viewed.value)
-                
-        //         socket.emit('viewed',{
-        //             from: from.value,
-        //             to: viewed.value,
-        //         })
-        //     })}
-            
-        //     console.log('from'+from.value)
-        //     console.log('to'+viewed.value)
        
         socket.on('viewed_notification',function(data){
             console.log("unlike notifi" + data)

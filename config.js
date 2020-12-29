@@ -7,7 +7,7 @@ var connection = mysql.createConnection({
     database: 'Matcha'
 });
 
-const port = 8014;
+const port = 8010;
 
 module.exports.port = port;
 module.exports.connection = connection;
