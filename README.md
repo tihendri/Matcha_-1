@@ -19,7 +19,8 @@ Matcha is a website that allows users to find each other using geolocation and c
 3. In the projects folder run npm install in your terminal, this will install all the required dependencies as well as generate a package.lock file which is the tree representation of all your dependencies
 
 4. Configure your MySQL database to use the following credentials initially
-#### User:root Password:matcha123
+      User:root
+      Password:matcha123
 
 ##### Remember to change these credentials to make the database more secure
 
